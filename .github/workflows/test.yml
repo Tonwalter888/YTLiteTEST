@@ -179,14 +179,6 @@ jobs:
             git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
           fi
 
-      - name: Build YouGroupSettings
-        run: |
-          cd ${{ github.workspace }}/YouGroupSettings
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/ygs.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
       - name: Build YTVideoOverlay
         run: |
           cd ${{ github.workspace }}/YTVideoOverlay
