@@ -143,43 +143,23 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YouSlider
+      - name: Clone YTUHD
         run: |
-         if [ -d "${{ github.workspace }}/YouSlider" ]; then
-            echo "YouSlider exists. Pulling latest changes..."
-            cd ${{ github.workspace }}/YouSlider
+         if [ -d "${{ github.workspace }}/YTUHD" ]; then
+            echo "YTUHD exists. Pulling latest changes..."
+            cd ${{ github.workspace }}/YTUHD
             git pull
           else
-            echo "YouSlider does not exist. Cloning repository..."
+            echo "YTUHD does not exist. Cloning repository..."
             cd ${{ github.workspace }}
-            git clone --quiet --depth=1 https://github.com/PoomSmart/YouSlider.git
-          fi
-
-      - name: Clone Alderis
-        run: |
-         if [ -d "${{ github.workspace }}/Alderis" ]; then
-            echo "Alderis exists. Pulling latest changes..."
-            cd ${{ github.workspace }}/Alderis
-            git pull
-          else
-            echo "Alderis does not exist. Cloning repository..."
-            cd ${{ github.workspace }}
-            git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
+            git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git
           fi
           
-      - name: Build Alderis
+      - name: Build YTUHD
         run: |
-          cd ${{ github.workspace }}/Alderis
+          cd ${{ github.workspace }}/YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/alderis.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build YouSlider
-        run: |
-          cd ${{ github.workspace }}/YouSlider
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youslider.deb
+          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
