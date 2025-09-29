@@ -165,19 +165,6 @@ jobs:
             echo "Alderis does not exist. Cloning repository..."
             cd ${{ github.workspace }}
             git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
-            cp -r "${{ github.workspace }}/Alderis" "$THEOS/include/Alderis"
-          fi
-
-      - name: Clone YouGroupSettings
-        run: |
-         if [ -d "${{ github.workspace }}/YouGroupSettings" ]; then
-            echo "YouGroupSettings exists. Pulling latest changes..."
-            cd ${{ github.workspace }}/YouGroupSettings
-            git pull
-          else
-            echo "YouGroupSettings does not exist. Cloning repository..."
-            cd ${{ github.workspace }}
-            git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
           fi
 
       - name: Clone YTVideoOverlay
