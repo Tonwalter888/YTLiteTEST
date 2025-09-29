@@ -159,8 +159,9 @@ jobs:
         run: |
            git clone --quiet --depth=1 https://github.com/fuyou-chan/libundirect.git
            cd libundirect
-           cp -r libundirect.h $THEOS/include/libundirect
-           cp -r libundirect_dynamic.h $THEOS/include/libundirect
+           mkdir -p "$THEOS/include/libundirect"
+           cp -r libundirect.h "$THEOS/include/libundirect"
+           cp -r libundirect_dynamic.h "$THEOS/include/libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
   
