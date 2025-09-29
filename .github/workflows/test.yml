@@ -167,7 +167,7 @@ jobs:
            cd libhooker
            cd libhooker
            cd include
-           cp -r libheader.h "$THEOS/include/libundirect"
+           cp -r libhooker.h "$THEOS/include/libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
   
