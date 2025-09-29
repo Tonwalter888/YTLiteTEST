@@ -158,10 +158,16 @@ jobs:
       - name: Install libundirect
         run: |
            git clone --quiet --depth=1 https://github.com/fuyou-chan/libundirect.git
+           git clone --quiet --depth=1 https://github.com/coolstar/libhooker.git
            cd libundirect
            mkdir -p "$THEOS/include/libundirect"
            cp -r libundirect.h "$THEOS/include/libundirect"
            cp -r libundirect_dynamic.h "$THEOS/include/libundirect"
+           cd ..
+           cd libhooker
+           cd libhooker
+           cd include
+           cp -r libheader.h "$THEOS/include/libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
   
