@@ -157,7 +157,7 @@ jobs:
 
       - name: Install libundirect
         run: |
-           git clone --quiet --depth=1 https://github.com/fuyou-chan/libundirect.git
+           git clone --quiet --depth=1 https://github.com/opa334/libundirect.git
            cd libundirect
            chmod +x install_to_theos.sh
            ./install_to_theos.sh
