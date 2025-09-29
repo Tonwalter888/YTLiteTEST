@@ -166,24 +166,12 @@ jobs:
             cd ${{ github.workspace }}
             git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
           fi
-
-      - name: Clone YTVideoOverlay
+          
+      - name: Build Alderis
         run: |
-         if [ -d "${{ github.workspace }}/YTVideoOverlay" ]; then
-            echo "YTVideoOverlay exists. Pulling latest changes..."
-            cd ${{ github.workspace }}/YTVideoOverlay
-            git pull
-          else
-            echo "YTVideoOverlay does not exist. Cloning repository..."
-            cd ${{ github.workspace }}
-            git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-          fi
-
-      - name: Build YTVideoOverlay
-        run: |
-          cd ${{ github.workspace }}/YTVideoOverlay
+          cd ${{ github.workspace }}/Alderis
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+          mv packages/*.deb ${{ github.workspace }}/alderis.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -191,15 +179,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/YouSlider
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youslide.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build Alderis
-        run: |
-          cd ${{ github.workspace }}/Alderis
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/alderis.deb
+          mv packages/*.deb ${{ github.workspace }}/youslider.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
