@@ -154,7 +154,14 @@ jobs:
             cd ${{ github.workspace }}
             git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git
           fi
-          
+
+      - name: Install libundirect
+        run: |
+           git clone --quiet --depth=1 https://github.com/fuyou-chan/libundirect.git
+           cd libundirect
+           chmod +x install_to_theos.sh
+           ./install_to_theos.sh
+  
       - name: Build YTUHD
         run: |
           cd ${{ github.workspace }}/YTUHD
