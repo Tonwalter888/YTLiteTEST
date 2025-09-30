@@ -159,10 +159,10 @@ jobs:
         run: |
            git clone --quiet --depth=1 https://github.com/Tonwalter888/libundirect.git
            cd libundirect
-           mkdir -p "$THEOS/include/libundirect"
-           cp -r libundirect.h "$THEOS/include/libundirect"
-           cp -r libundirect_dynamic.h "$THEOS/include/libundirect"
-           cp -r libhooker.h "$THEOS/include/libundirect"
+           mkdir -p "$THEOS/lib/libundirect"
+           cp -r libundirect.h "$THEOS/lib/libundirect"
+           cp -r libundirect_dynamic.h "$THEOS/lib/libundirect"
+           cp -r libhooker.h "$THEOS/lib/libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
   
