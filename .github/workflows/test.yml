@@ -10,7 +10,7 @@ on:
 
       tweak_version:
         description: "YTLite Version (You can type manually from YTLite Releases)"
-        default: "5.2b2"
+        default: "5.2b3"
         required: true
         type: string
 
@@ -143,94 +143,6 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YouPiP
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
-    
-      - name: Clone YTUHD
-        uses: actions/checkout@v5
-        with:
-          repository: PoomSmart/YTUHD
-          ref: 0f59b38817d554ab692a0053456319847a6ab1a1
-          path: ${{ github.workspace }}/YTUHD
-          submodules: recursive
-
-      - name: Clone Return-YouTube-Dislikes
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
-
-      - name: Clone YouGroupSettings
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
-           
-      - name: Clone YTVideoOverlay
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-
-      - name: Clone NoYTPremium
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/NoYTPremium.git
-          
-      - name: Clone YTABConfig
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
-                  
-      - name: Clone YouQuality
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
-
-      - name: Clone YouSpeed
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouSpeed.git
-
-      - name: Clone DontEatMyContent
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/therealFoxster/DontEatMyContent.git
-
-      - name: Clone IAmYouTube
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
-
-      - name: Clone YouMute
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouMute.git
-
-      - name: Clone YTDarker
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YTDarker.git
-
-      - name: Clone YouTube-X
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
-
-      - name: Clone YTABGoodies
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABGoodies.git
-
-      - name: Clone YouTimeStamp
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouTimeStamp.git
-    
-      - name: Clone YouLoop
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouLoop.git
-
       - name: Clone Alderis
         run: |
            cd ${{ github.workspace }}
@@ -240,50 +152,22 @@ jobs:
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/PoomSmart/YouSlider.git
-        
-      - name: Build Tweaks
+
+      - name: Build YouSlider
         run: |
-          cd ${{ github.workspace }}/YouPiP
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YTUHD
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/Return-YouTube-Dislikes
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YouGroupSettings
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YTVideoOverlay
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/NoYTPremium
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YTABConfig
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YouQuality
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YouSpeed
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/DontEatMyContent
-          make clean package DEBUG=0 FINALPACKAGE=1 
-          cd ${{ github.workspace }}/IAmYouTube
-          make clean package DEBUG=0 FINALPACKAGE=1 
-          cd ${{ github.workspace }}/YouMute
-          make clean package DEBUG=0 FINALPACKAGE=1 
-          cd ${{ github.workspace }}/YTDarker
-          make clean package DEBUG=0 FINALPACKAGE=1 
-          cd ${{ github.workspace }}/YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YTABGoodies
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YouTimeStamp
-          make clean package DEBUG=0 FINALPACKAGE=1
-          cd ${{ github.workspace }}/YouLoop
-          make clean package DEBUG=0 FINALPACKAGE=1
           cd ${{ github.workspace }}/YouSlider
           make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youslider.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build Alderis
+        run: |
           cd ${{ github.workspace }}/Alderis
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}
+          mv packages/*.deb ${{ github.workspace }}/alderis.deb
         env:
-          THEOS: ${{ github.workspace }}/theos    
+          THEOS: ${{ github.workspace }}/theos
   
       - name: Inject Tweaks Into IPA
         run: |
