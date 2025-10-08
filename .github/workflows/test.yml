@@ -129,7 +129,7 @@ jobs:
       - name: Build libundirect
         run: |
           cd ${{ github.workspace }}/libundirect
-          make clean package DEBUG=0 FINALPACKAGE=1 -not_for_dyld_shared_cache
+          make clean package DEBUG=0 FINALPACKAGE=1 LD_SHARED_CACHE_ELIGIBLE=NO
           mv packages/*.deb ${{ github.workspace }}/libundirect.deb
         env:
           THEOS: ${{ github.workspace }}/theos    
