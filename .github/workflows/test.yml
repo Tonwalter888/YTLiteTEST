@@ -122,6 +122,7 @@ jobs:
       - name: Build Alderis
         run: |
           cd ${{ github.workspace }}/Alderis
+          mkdir -p .theos/obj/install/Library/Frameworks
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
         env:
