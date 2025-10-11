@@ -86,11 +86,10 @@ jobs:
       - name: Install cyan and tbd
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+          cd /usr/local/bin
           wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac
           mv tbd-mac tbd
           chmod +x tbd
-          export PATH="$PATH:$GITHUB_PATH"
-          source ~/.zshrc
           
       - name: Clone Open in YouTube (Safari Extension)
         run: |
