@@ -88,8 +88,10 @@ jobs:
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip 
           wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac
           chmod +x tbd-mac
-          ./tbd-mac
-
+          mkdir -p tbd
+          mv tbd-mac tbd
+          export PATH="$PATH:$GITHUB_PATH"
+          
       - name: Clone Open in YouTube (Safari Extension)
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
