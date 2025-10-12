@@ -122,10 +122,10 @@ jobs:
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
 
-      - name: Clone YouShare
+      - name: Clone YTHoldForSpeed
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
+          git clone --quiet --depth=1 https://github.com/joshuaseltzer/YTHoldForSpeed.git
 
       - name: Build YTSilentVote
         run: |
@@ -141,16 +141,16 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ytspeed.deb
         env:
-          THEOS: ${{ github.workspace }}/theos    
+          THEOS: ${{ github.workspace }}/theos   
 
-      - name: Build YouShare
+      - name: Build YTHoldForSpeed
         run: |
-          cd ${{ github.workspace }}/YouShare
+          cd ${{ github.workspace }}/YTHoldForSpeed
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youshare.deb
+          mv packages/*.deb ${{ github.workspace }}/holdforspeed.deb
         env:
-          THEOS: ${{ github.workspace }}/theos 
-  
+          THEOS: ${{ github.workspace }}/theos
+        
       - name: Inject Tweaks Into IPA
         run: |
           tweaks="ytlite.deb"
