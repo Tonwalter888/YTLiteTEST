@@ -97,8 +97,6 @@ jobs:
            cd $THEOS/include
            git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
            cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -127,12 +125,12 @@ jobs:
       - name: Clone YouShare
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/aricloverEXTRA/YouShare.git
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
 
       - name: Clone YouSubscriptions
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/aricloverEXTRA/YouSubscriptions.git
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscriptions.git
     
       - name: Build YTSilentVote
         run: |
