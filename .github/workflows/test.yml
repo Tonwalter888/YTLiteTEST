@@ -115,6 +115,8 @@ jobs:
           chmod +x install_to_theos.sh
           ./install_to_theos.sh
           mv packages/*.deb ${{ github.workspace }}/libundirect.deb
+          cp -r .theos/obj/libundirect.dylib /usr/local/lib/
+          chmod 755 /usr/local/lib/libundirect.dylib
         env:
           THEOS: ${{ github.workspace }}/theos  
 
