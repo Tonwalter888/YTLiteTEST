@@ -125,7 +125,7 @@ jobs:
       - name: Clone YTHoldForSpeed
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/joshuaseltzer/YTHoldForSpeed.git
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YTHoldForSpeed.git
 
       - name: Build YTSilentVote
         run: |
