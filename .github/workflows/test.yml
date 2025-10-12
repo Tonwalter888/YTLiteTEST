@@ -119,11 +119,6 @@ jobs:
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/qnblackcat/YTSpeed.git
 
-      - name: Clone YTTapToSeek
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
-
       - name: Clone YTSilentVote
         run: |
           cd ${{ github.workspace }}
@@ -134,7 +129,7 @@ jobs:
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/aricloverEXTRA/YouShare.git
 
-      - name: Clone YTSilentVote
+      - name: Clone YouSubscriptions
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/aricloverEXTRA/YouSubscriptions.git
@@ -155,11 +150,19 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos    
 
-      - name: Build YTTapToSeek
+      - name: Build YouSubscriptions
         run: |
-          cd ${{ github.workspace }}/YTTapToSeek
+          cd ${{ github.workspace }}/YouSubscriptions
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/taptoseek.deb
+          mv packages/*.deb ${{ github.workspace }}/yousub.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos 
+
+      - name: Build YouShare
+        run: |
+          cd ${{ github.workspace }}/YouShare
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youshare.deb
         env:
           THEOS: ${{ github.workspace }}/theos 
   
