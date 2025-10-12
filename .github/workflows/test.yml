@@ -114,6 +114,7 @@ jobs:
           cd libundirect
           chmod +x install_to_theos.sh
           ./install_to_theos.sh
+          mv packages/*.deb ${{ github.workspace }}/libundirect.deb
         env:
           THEOS: ${{ github.workspace }}/theos  
 
