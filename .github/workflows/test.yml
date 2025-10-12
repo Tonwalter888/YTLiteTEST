@@ -127,11 +127,6 @@ jobs:
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
 
-      - name: Clone YouSubscriptions
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscriptions.git
-    
       - name: Build YTSilentVote
         run: |
           cd ${{ github.workspace }}/YTSilentVote
@@ -147,14 +142,6 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ytspeed.deb
         env:
           THEOS: ${{ github.workspace }}/theos    
-
-      - name: Build YouSubscriptions
-        run: |
-          cd ${{ github.workspace }}/YouSubscriptions
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/yousub.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos 
 
       - name: Build YouShare
         run: |
