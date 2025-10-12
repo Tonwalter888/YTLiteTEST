@@ -9,8 +9,8 @@ on:
         type: string
 
       tweak_version:
-        description: "YTLite Version (You can type manually from YTLite Releases)"
-        default: "5.2b2"
+        description: "YTLite Version (You can enter the version manually from YTLite releases or leave default.)"
+        default: "5.2b3"
         required: true
         type: string
 
@@ -33,7 +33,7 @@ concurrency:
 jobs:
   build:
     name: Build YTLitePlusEXTRA IPA
-    runs-on: macos-13
+    runs-on: macos-latest
     permissions:
       contents: write
 
@@ -61,7 +61,7 @@ jobs:
           fi
 
       - name: Install Dependencies
-        run: brew install make ldid swiftlint
+        run: brew install make ldid
 
       - name: Set PATH Environment Variable
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
@@ -75,29 +75,22 @@ jobs:
         
       - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
-          cd sdks
-          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/xybp888/iOS-SDKs.git
+          cd iOS-SDKs
+          git sparse-checkout set --no-cone iPhoneOS18.6.sdk
           git checkout
           mv *.sdk $THEOS/sdks
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install cyan and tbd
+      - name: Install cyan
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-          cd /usr/local/bin
-          wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac
-          mv tbd-mac tbd
-          chmod +x tbd
-          
-      - name: Clone Open in YouTube (Safari Extension)
+
+      - name: Download YTLite
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
-          cd OpenYouTubeSafariExtension
-          git sparse-checkout set --no-cone OpenYouTubeSafariExtension.appex
-          git checkout
-          mv *.appex ${{ github.workspace }}
+          deb_url="https://github.com/dayanch96/YTLite/releases/download/v${{ inputs.tweak_version }}/com.dvntm.ytlite_${{ inputs.tweak_version }}_iphoneos-arm64.deb"
+          wget "$deb_url" --no-verbose -O ${{ github.workspace }}/ytlite.deb
 
       - name: Clone YouTubeHeader
         run: |
@@ -114,31 +107,49 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install libundirect
+      - name: Clone YTSpeed
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/libundirect.git
-          cd libundirect
-          chmod +x install_to_theos.sh
-          ./install_to_theos.sh
+          git clone --quiet --depth=1 https://github.com/qnblackcat/YTSpeed.git
+
+      - name: Clone YTTapToSeek
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/bhackel/YTTapToSeek.git
+
+      - name: Clone YTSilentVote
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
+    
+      - name: Build YTSilentVote
+        run: |
+          cd ${{ github.workspace }}/YTSilentVote
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/novote.deb
         env:
           THEOS: ${{ github.workspace }}/theos
     
-      - name: Clone YTUHD
+      - name: Build YTSpeed
         run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git 
-
-      - name: Build YTUHD
-        run: |
-          cd ${{ github.workspace }}/YTUHD
+          cd ${{ github.workspace }}/YTSpeed
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          mv packages/*.deb ${{ github.workspace }}/ytspeed.deb
         env:
-          THEOS: ${{ github.workspace }}/theos
+          THEOS: ${{ github.workspace }}/theos    
+
+      - name: Build YTTapToSeek
+        run: |
+          cd ${{ github.workspace }}/YTTapToSeek
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/taptoseek.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos 
   
       - name: Inject Tweaks Into IPA
         run: |
+          tweaks="ytlite.deb"
+
           for f in *.deb; do
             if [ -f "$f" ]; then
               tweaks="$tweaks $f"
@@ -150,7 +161,7 @@ jobs:
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v2.3.3
         with:
-          tag_name: ytliteplusextra${{ github.run_number }}
+          tag_name: ytliteplusextra-ipa${{ github.run_number }}
           name: YTLitePlusEXTRA_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
           files: YTLitePlusEXTRA_v${{ inputs.tweak_version }}.ipa
           draft: true
