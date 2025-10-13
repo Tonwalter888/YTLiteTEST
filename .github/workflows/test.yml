@@ -393,9 +393,6 @@ jobs:
       - name: Set Output File List
         run: |
           files=""
-          if [ "${{ inputs.create_cyan }}" = "true" || "${{ inputs.create_tf }}" = "true" ]; then
-            files="${files}Cyan_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.cyan ${files}TrollFools_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.zip"$'\n'
-          fi
           if [ "${{ inputs.create_cyan }}" = "true" ]; then
             files="${files}Cyan_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.cyan"$'\n'
           fi
