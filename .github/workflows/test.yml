@@ -107,17 +107,6 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install libundirect
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/libundirect.git
-          cd libundirect
-          chmod +x install_to_theos.sh
-          ./install_to_theos.sh
-          mv packages/*.deb ${{ github.workspace }}/libundirect.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos  
-
       - name: Clone YTVideoOverlay
         run: |
           cd ${{ github.workspace }}
@@ -137,20 +126,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTHoldForSpeed.git
-
-      - name: Clone YTUHD
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git
-
-      - name: Build YTUHD
-        run: |
-          cd ${{ github.workspace }}/YTUHD
-          make clean package DEBUG=0 FINALPACKAGE=1 messages=yes
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
+          
       - name: Build YTVideoOverlay
         run: |
           cd ${{ github.workspace }}/YTVideoOverlay
