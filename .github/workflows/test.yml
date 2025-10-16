@@ -124,7 +124,6 @@ jobs:
         run: |
           tweaks="ytlite.deb"
           cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
-          rm -fr youtube.ipa
 
       - name: Upload IPA to Catbox
         if: ${{ inputs.catbox_upload }}
@@ -141,7 +140,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.2
         with:
           name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }} 
-          path: ${{ github.workspace }}/*.ipa
+          path: ${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
 
       - name: Create a Draft Release
         if: ${{ inputs.draft_release }}
