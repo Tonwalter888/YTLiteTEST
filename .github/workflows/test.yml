@@ -1,18 +1,12 @@
-name: Build TrollFools/Cyan files
+name: Build YTLitePlusEXTRA IPA
 on:
   workflow_dispatch:
     inputs:
-      create_cyan:
-        description: "Build .cyan file"
-        type: boolean
+      ipa_url:
+        description: "URL to the decrypted IPA file"
+        default: ""
         required: true
-        default: true
-
-      create_tf:
-        description: "Build .zip for TrollFools"
-        type: boolean
-        required: true
-        default: true
+        type: string
 
       tweak_version:
         description: "YTLite Version (You can enter the version manually from YTLite releases or leave default.)"
@@ -38,7 +32,7 @@ concurrency:
 
 jobs:
   build:
-    name: build
+    name: Build YTLitePlusEXTRA IPA
     runs-on: macos-latest
     permissions:
       contents: write
@@ -50,14 +44,32 @@ jobs:
           path: main
           submodules: recursive
 
-      - name: Check Inputs
-        if: ${{ !inputs.create_cyan && !inputs.create_tf }}
+      - name: Hide Sensitive Inputs
+        uses: levibostian/action-hide-sensitive-inputs@v1
+        with:
+          exclude_inputs: bundle_id,display_name,tweak_version
+          
+      - name: Download and Validate IPA
         run: |
-          echo "No output format selected."
-          exit 0
+          wget "${{ inputs.ipa_url }}" --no-verbose -O ${{ github.workspace }}/youtube.ipa
+
+          file_type=$(file --mime-type -b ${{ github.workspace }}/youtube.ipa)
+
+          if [[ "$file_type" != "application/x-ios-app" && "$file_type" != "application/zip" ]]; then
+            echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
+            exit 1
+          fi
+
+      - name: Get Youtube Version 
+        run: |
+          mkdir -p ${{ github.workspace }}/ytversion
+          cp -r ${{ github.workspace }}/youtube.ipa ${{ github.workspace }}/ytversion/youtube.ipa
+          unzip -q ${{ github.workspace }}/ytversion/youtube.ipa -d ${{ github.workspace }}/ytversion/ytextracted
+          echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ${{ github.workspace }}/ytversion/ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
+          echo $YT_VERSION
 
       - name: Install Dependencies
-        run: brew install make ldid dpkg swiftlint
+        run: brew install make ldid swiftlint
 
       - name: Set PATH Environment Variable
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
@@ -68,7 +80,7 @@ jobs:
           repository: theos/theos
           path: ${{ github.workspace }}/theos
           submodules: recursive
-
+        
       - name: Download iOS SDK
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/xybp888/iOS-SDKs.git
@@ -79,16 +91,11 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install tbd
+      - name: Install cyan and tbd
         run: |
-          cd /usr/local/bin
-          wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac
-          mv tbd-mac tbd
-          chmod +x tbd
-
-      - name: Install cyan
-        if: ${{ inputs.create_cyan }}
-        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+          pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+          wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac -O /usr/local/bin/tbd
+          chmod +x /usr/local/bin/tbd 
 
       - name: Download YTLite
         run: |
@@ -96,7 +103,6 @@ jobs:
           wget "$deb_url" --no-verbose -O ${{ github.workspace }}/ytlite.deb
 
       - name: Clone Open in YouTube (Safari Extension)
-        if: ${{ inputs.create_cyan }}
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
           cd OpenYouTubeSafariExtension
@@ -106,9 +112,9 @@ jobs:
 
       - name: Clone YouTubeHeader
         run: |
-          cd $THEOS/include
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
-          cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
+           cd $THEOS/include
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+           cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -123,13 +129,14 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
-
+    
       - name: Clone YTUHD
         uses: actions/checkout@v5
         with:
           repository: PoomSmart/YTUHD
           ref: 0f59b38817d554ab692a0053456319847a6ab1a1
           path: ${{ github.workspace }}/YTUHD
+          submodules: recursive
 
       - name: Clone Return-YouTube-Dislikes
         run: |
@@ -138,33 +145,33 @@ jobs:
 
       - name: Clone YouGroupSettings
         run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
-
-      - name: Clone YouQuality
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
-
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
+           
       - name: Clone YTVideoOverlay
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-
-      - name: Clone DontEatMyContent
-        run: |
-          cd ${{ github.workspace }}
-          git clone --quiet --depth=1 --recurse-submodules https://github.com/therealFoxster/DontEatMyContent.git
-
+          
       - name: Clone YTABConfig
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
+                  
+      - name: Clone YouQuality
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
 
       - name: Clone YouSpeed
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouSpeed.git
+
+      - name: Clone DontEatMyContent
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/therealFoxster/DontEatMyContent.git
 
       - name: Clone IAmYouTube
         run: |
@@ -208,9 +215,9 @@ jobs:
 
       - name: Clone YTSilentVote
         run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
-
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
+      
       - name: Build YouPiP
         run: |
           cd ${{ github.workspace }}/YouPiP
@@ -353,64 +360,29 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ytnovote.deb
         env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Generate .cyan File
-        if: ${{ inputs.create_cyan }}
+          THEOS: ${{ github.workspace }}/theos  
+  
+      - name: Inject Tweaks Into IPA
         run: |
           tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
 
-          for deb in *.deb; do
-            if [ -f "$deb" ]; then
-              tweaks="$tweaks $deb"
-            fi
-          done
-
-          cgen -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }} -o Cyan_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.cyan
-
-      - name: Generate .zip File for TrollFools
-        if: ${{ inputs.create_tf }}
-        run: |
-          mkdir -p tf
-
           for f in *.deb; do
             if [ -f "$f" ]; then
-              echo "Extracting $f..."
-              mkdir -p tmp_deb
-              dpkg-deb -x "$f" tmp_deb
-              find tmp_deb -type f -name "*.dylib" -exec cp -R {} tf/ \;
-              find tmp_deb -type d -name "*.bundle" -exec cp -R {} tf/ \;
-              rm -rf tmp_deb
+              tweaks="$tweaks $f"
             fi
           done
 
-          echo "Zipping..."
-          cd tf
-          zip -r "../TrollFools_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.zip" .
-          cd ..
-          rm -rf tf
-
-      - name: Set Output File List
-        run: |
-          files=""
-          if [ "${{ inputs.create_cyan }}" = "true" ]; then
-            files="${files}Cyan_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.cyan"$'\n'
-          fi
-          if [ "${{ inputs.create_tf }}" = "true" ]; then
-            files="${files}TrollFools_YTLitePlusEXTRA_v${{ inputs.tweak_version }}.zip"$'\n'
-          fi
-          echo -e "files<<EOF" >> $GITHUB_OUTPUT
-          echo -e "$files" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v2.3.3
         with:
-          tag_name: ytliteplusextra-cyants${{ github.run_number }}
-          name: YTLitePlusEXTRA_v${{ inputs.tweak_version }}_Cyan_TrollFools (${{ github.run_number }})
-          files: ${{ steps.filelist.outputs.files }}
+          tag_name: ytliteplusextra-ipa${{ github.run_number }}
+          name: YTLitePlusEXTRA_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
+          files: YTLitePlusEXTRA_v${{ inputs.tweak_version }}.ipa
           draft: true
 
       - name: Output Release URL
         run: |
           echo "::notice::Release available at: https://github.com/${{ github.repository }}/releases"
+          
