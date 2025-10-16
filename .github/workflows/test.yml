@@ -154,12 +154,12 @@ jobs:
       - name: Output a Artifact Upload
         if: ${{ inputs.upload_artifact }}
         run: |
-          echo -e '::notice::The artifact was uploaded successfully! Refresh and [scroll down](#artifacts) to view the artifact. Note that you must be signed in to GitHub to download it.' >> $GITHUB_STEP_SUMMARY
+          echo -e '::notice::The artifact was uploaded successfully! Refresh and [scroll down](#artifacts) to view the artifact. Note that you must be signed in to GitHub to download it.'
 
       - name: Output IPA URL Link (Catbox Upload)
         if: ${{ inputs.catbox_upload}}
         run: |
-          echo -e '::notice::The Catbox upload was successful! Here is a permanent shareable link: '$CATBOX_URL >> $GITHUB_STEP_SUMMARY
+          echo -e '::notice::The Catbox upload was successful! Here is a permanent shareable link: $CATBOX_URL'
 
       - name: Output a Dreaft Release Link
         if: ${{ inputs.draft_release }}
