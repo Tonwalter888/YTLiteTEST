@@ -66,7 +66,6 @@ jobs:
           cp -r ${{ github.workspace }}/youtube.ipa ${{ github.workspace }}/ytversion/youtube.ipa
           unzip -q ${{ github.workspace }}/ytversion/youtube.ipa -d ${{ github.workspace }}/ytversion/ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ${{ github.workspace }}/ytversion/ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
-          echo $YT_VERSION
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
@@ -111,8 +110,8 @@ jobs:
         uses: softprops/action-gh-release@v2.3.3
         with:
           tag_name: ytliteplusextra-ipa${{ github.run_number }}
-          name: YTLitePlusEXTRA_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
-          files: YTLitePlusEXTRA_v${{ inputs.tweak_version }}.ipa
+          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
+          files: YYTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
           draft: true
 
       - name: Output Release URL
