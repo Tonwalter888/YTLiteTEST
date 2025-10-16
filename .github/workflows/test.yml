@@ -111,7 +111,7 @@ jobs:
         with:
           tag_name: ytliteplusextra-ipa${{ github.run_number }}
           name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
-          files: YYTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
+          files: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
           draft: true
 
       - name: Output Release URL
