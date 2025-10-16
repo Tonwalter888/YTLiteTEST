@@ -164,6 +164,6 @@ jobs:
       - name: Output a Dreaft Release Link
         if: ${{ inputs.draft_release }}
         run: |
-          echo -e '### 🚀 Draft Release\n\nThe release draft has been created successfully! You can view your releases here: https://github.com/${{ github.repository }}/releases'
+          echo -e '### 🚀 Draft Release\n\nThe release draft has been created successfully! You can view your releases here: https://github.com/${{ github.repository }}/releases' >> $GITHUB_STEP_SUMMARY
 
           
