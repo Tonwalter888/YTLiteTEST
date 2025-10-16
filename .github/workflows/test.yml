@@ -65,7 +65,7 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,tweak_version
+          exclude_inputs: bundle_id,display_name,tweak_version,draft_release,catbox_upload,upload_artifact
           
       - name: Download and Validate IPA
         run: |
