@@ -156,7 +156,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex libundirect.dylib"
+          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
