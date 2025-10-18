@@ -1,4 +1,4 @@
-name: Build and Release YTLitePlusEXTRA IPA
+vname: Build and Release YTLitePlusEXTRA IPA
 on:
   workflow_dispatch:
     inputs:
@@ -136,15 +136,15 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YouPiP
+      - name: Clone YTUHD
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git
     
-      - name: Clone libundirect
+      - name: Install libundirect
         run: |
           cd ${{ github.workspace }}
-          wget https://opa334.github.io/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb --no-verbose -O ${{ github.workspace }}/libundirect.deb
+          wget https://files.catbox.moe/opubgx.dylib --no-verbose -O ${{ github.workspace }}/libundirect.dylib
 
       - name: Build YTUHD
         run: |
@@ -156,7 +156,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
+          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex libundirect.dylib"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
