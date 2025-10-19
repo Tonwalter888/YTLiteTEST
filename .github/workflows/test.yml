@@ -146,7 +146,7 @@ jobs:
           cd ${{ github.workspace }}
           git clone https://github.com/Tonwalter888/libundirect.git
           cd libundirect
-          chmod -x install_to_theos.sh
+          chmod +x install_to_theos.sh
           ./install_to_theos.sh
         env:
           THEOS: ${{ github.workspace }}/theos 
