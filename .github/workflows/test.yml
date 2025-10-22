@@ -107,14 +107,6 @@ jobs:
         run: |
           wget https://files.catbox.moe/v50glr.deb --no-verbose -O ${{ github.workspace }}/ytlite.deb
 
-      - name: Clone Open in YouTube (Safari Extension)
-        run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
-          cd OpenYouTubeSafariExtension
-          git sparse-checkout set --no-cone OpenYouTubeSafariExtension.appex
-          git checkout
-          mv *.appex ${{ github.workspace }}
-
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
@@ -130,17 +122,15 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Download libundirect
+      - name: Install libundirect
         run: |
-           git clone --quiet https://github.com/Tonwalter888/libundirect.git
-           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O $THEOS/include/libhooker.h
+           git clone --quiet https://github.com/opa334/libundirect.git
            cd libundirect
+           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O libhooker.h
+           cp -f libhooker.h $THEOS/include
            make clean 
            make FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-           cp -v "./.theos/obj/libundirect.dylib" "$THEOS/lib"
-           cp -v "./.theos/obj/libundirect.dylib" "${{ github.workspace }}"
-           mkdir -p "$THEOS/include/libundirect"
-           cp -v "libundirect.h" "$THEOS/include/libundirect"
+           cp -f .theos/obj/libundirect.dylib ${{ github.workspace }}
            echo "Successfully Installed libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
@@ -148,19 +138,19 @@ jobs:
       - name: Clone YTUHD
         run: |
           cd ${{ github.workspace }}
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTUHD.git
+          git clone --quiet https://github.com/PoomSmart/YTUHD.git
 
       - name: Build YTUHD
         run: |
           cd ${{ github.workspace }}/YTUHD
-          make clean package FINALPACKAGE=1
+          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex libundirect.dylib"
+          tweaks="ytlite.deb libundirect.dylib"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
