@@ -132,16 +132,15 @@ jobs:
 
       - name: Download libundirect
         run: |
-           git clone --quiet https://github.com/opa334/libundirect.git
+           git clone --quiet https://github.com/Tonwalter888/libundirect.git
            wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O $THEOS/include/libhooker.h
            cd libundirect
-           sed -i'' -e 's/16.2/16.5/g' Makefile
            make clean 
            make FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-           cp -v "./.theos/obj/libundirect.dylib" "$THEOS/lib/iphone/rootless"
+           cp -v "./.theos/obj/libundirect.dylib" "$THEOS/lib"
            cp -v "./.theos/obj/libundirect.dylib" "${{ github.workspace }}"
            mkdir -p "$THEOS/include/libundirect"
-           cp -v "libundirect_dynamic.h" "$THEOS/include/libundirect"
+           cp -v "libundirect.h" "$THEOS/include/libundirect"
            echo "Successfully Installed libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
@@ -154,7 +153,7 @@ jobs:
       - name: Build YTUHD
         run: |
           cd ${{ github.workspace }}/YTUHD
-          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
+          make clean package FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
