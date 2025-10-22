@@ -126,6 +126,8 @@ jobs:
         run: |
            git clone --quiet https://github.com/opa334/libundirect.git
            cd libundirect
+           mkdir -p $THEOS/include/libundirect
+           cp -f libundirect.h $THEOS/include/libundirect
            wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O libhooker.h
            cp -f libhooker.h $THEOS/include
            sed -i'' -e 's/16.2/16.5/g' Makefile
