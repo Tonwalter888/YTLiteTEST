@@ -128,13 +128,13 @@ jobs:
            cd libundirect
            mkdir -p $THEOS/include/libundirect
            cp -f libundirect.h $THEOS/include/libundirect
-           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O libhooker.h
+           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h
            cp -f libhooker.h $THEOS/include
            sed -i'' -e 's/16.2/16.5/g' Makefile
            make clean 
            make FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-           cp -f .theos/obj/libundirect.dylib ${{ github.workspace }}
-           cp -f .theos/obj/libundirect.dylib $THEOS/lib/iphone/rootless
+           wget --no-verbose https://github.com/und3fined/uYouPlus/raw/refs/heads/und3fy/dylib/libundirect.dylib -O ${{ github.workspace }}/libundirect.dylib
+           wget --no-verbose https://github.com/und3fined/uYouPlus/raw/refs/heads/und3fy/dylib/libundirect.dylib -O $THEOS/lib/iphone/rootless/libundirect.dylib
            echo "Successfully Installed libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
