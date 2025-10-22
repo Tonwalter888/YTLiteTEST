@@ -132,8 +132,17 @@ jobs:
 
       - name: Download libundirect
         run: |
-          wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-          cp -f libundirect.dylib $THEOS/lib/libundirect.dylib
+           git clone --quiet https://github.com/opa334/libundirect.git
+           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h -O $THEOS/include/libhooker.h
+           cd libundirect
+           sed -i'' -e 's/16.2/16.5/g' Makefile
+           make clean 
+           make FINALPACKAGE=1
+           cp -v "./.theos/obj/libundirect.dylib" "$THEOS/lib"
+           cp -v "./.theos/obj/libundirect.dylib" "${{ github.workspace }}"
+           mkdir -p "$THEOS/include/libundirect"
+           cp -v "libundirect.h" "$THEOS/include/libundirect"
+           echo "Successfully Installed libundirect"
         env:
           THEOS: ${{ github.workspace }}/theos
 
