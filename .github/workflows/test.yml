@@ -89,9 +89,9 @@ jobs:
         
       - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/xybp888/iOS-SDKs.git
-          cd iOS-SDKs
-          git sparse-checkout set --no-cone iPhoneOS18.6.sdk
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
+          cd sdks
+          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
           git checkout
           mv *.sdk $THEOS/sdks
         env:
@@ -132,10 +132,15 @@ jobs:
 
       - name: Download libundirect
         run: |
-           mkdir -p $THEOS/include/libundirect
-           git clone --quiet --depth=1 https://github.com/opa334/libundirect.git
-           cp -r libundirect/libundirect.h $THEOS/include/libundirect
-           wget https://files.catbox.moe/opubgx.dylib --no-verbose -O $THEOS/lib/iphone/rootless/libundirect.dylib
+          git clone --quiet --depth=1 https://github.com/opa334/libundirect.git
+          git clone --quiet https://github.com/coolstar/libhooker.git
+          cp -f libhooker/libhooker/include/libhooker.h $THEOS/lib/iphone/rootless/
+          mkdir -p $THEOS/include/libundirect
+          cp -r libundirect/libundirect.h $THEOS/include/libundirect
+          cd libundirect
+          sed -i'' -e 's/16.2/16.5/g' Makefile
+          make clean FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          cp -f .theos/obj/libundirect.dylib ${{ github.workspace }}
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -154,7 +159,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
+          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex libundirect.dylib"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
