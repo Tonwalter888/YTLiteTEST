@@ -135,7 +135,7 @@ jobs:
            mkdir -p $THEOS/include/libundirect
            git clone --quiet --depth=1 https://github.com/opa334/libundirect.git
            cp -r libundirect/libundirect.h $THEOS/include/libundirect
-           wget https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb --no-verbose -O $THEOS/lib/iphone/rootless
+           wget https://files.catbox.moe/opubgx.dylib --no-verbose -O $THEOS/lib/iphone/rootless/libundirect.dylib
         env:
           THEOS: ${{ github.workspace }}/theos
 
