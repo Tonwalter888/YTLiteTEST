@@ -139,6 +139,7 @@ jobs:
           sed -i'' -e 's/16.2/16.5/g' Makefile
           make clean
           make FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          cp -f .theos/obj/libundirect.dylib $THEOS/lib/libundirect.dylib
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -150,7 +151,7 @@ jobs:
       - name: Build YTUHD
         run: |
           cd ${{ github.workspace }}/YTUHD
-          make clean package FINALPACKAGE=1
+          make clean package FINALPACKAGE=1 
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
