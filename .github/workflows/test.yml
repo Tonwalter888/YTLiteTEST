@@ -134,7 +134,6 @@ jobs:
         run: |
           wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
           cp -f libundirect.dylib $THEOS/lib/libundirect.dylib
-          cp -f libundirect.dylib ${{ github.workspace }}/libundirect.dylib
         env:
           THEOS: ${{ github.workspace }}/theos
 
