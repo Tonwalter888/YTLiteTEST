@@ -1,13 +1,7 @@
 name: Build and Release YTLitePlusEXTRA IPA
 on:
   workflow_dispatch:
-    inputs:
-      ipa_url:
-        description: "URL to the decrypted IPA file"
-        default: ""
-        required: true
-        type: string
-        
+    inputs:      
       display_name:
         description: "App Name (Optional)"
         default: "YouTube"
@@ -63,7 +57,7 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget "${{ inputs.ipa_url }}" --no-verbose -O ${{ github.workspace }}/youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O ${{ github.workspace }}/youtube.ipa
 
           file_type=$(file --mime-type -b ${{ github.workspace }}/youtube.ipa)
 
@@ -86,7 +80,7 @@ jobs:
       - name: Set PATH Environment Variable
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
 
-      - name: Install Theos
+      - name: Clone Theos
         uses: actions/checkout@v5
         with:
           repository: theos/theos
@@ -136,6 +130,15 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
+      - name: Download libundirect
+        run: |
+           mkdir -p $THEOS/include/libundirect
+           git clone --quiet --depth=1 https://github.com/opa334/libundirect.git
+           cp -r libundirect/libundirect.h $THEOS/include/libundirect
+           wget https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb --no-verbose -O $THEOS/lib/iphone/rootless
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
       - name: Clone YTUHD
         run: |
           cd ${{ github.workspace }}
@@ -159,12 +162,12 @@ jobs:
             fi
           done
           
-          cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Upload IPA to Catbox
         if: ${{ inputs.catbox_upload }}
         run: |
-          RESPONSE=$(curl -F "reqtype=fileupload" -F "fileToUpload=@${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa" https://catbox.moe/user/api.php)
+          RESPONSE=$(curl -F "reqtype=fileupload" -F "fileToUpload=@${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa" https://catbox.moe/user/api.php)
           CATBOX_URL=$(echo $RESPONSE | grep -o -E 'https://files.catbox.moe/[^"]*')
           echo "Uploaded artifact to $CATBOX_URL"
           CATBOX_FILE=$(echo $CATBOX_URL | sed 's|https://files.catbox.moe/||')
@@ -175,16 +178,16 @@ jobs:
         if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@v4.6.2
         with:
-          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}
-          path: ${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
+          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4
+          path: ${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa
 
       - name: Create a Draft Release
         if: ${{ inputs.draft_release }}
         uses: softprops/action-gh-release@v2.3.3
         with:
           tag_name: ytliteplusextra-ipa${{ github.run_number }}
-          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }} (${{ github.run_number }}) 
-          files: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ inputs.tweak_version }}.ipa
+          name: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4 (${{ github.run_number }}) 
+          files: YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa
           draft: true
 
       - name: Output an Artifact Upload
