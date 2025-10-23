@@ -137,7 +137,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/ellekit
           make deb
-          mv packages/*.deb ${{ github.workspace }}/ellekit.deb
+          mv packages/*arm64.deb ${{ github.workspace }}/ellekit.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
