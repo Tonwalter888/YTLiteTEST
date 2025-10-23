@@ -136,8 +136,7 @@ jobs:
       - name: Build ElleKit
         run: |
           cd ${{ github.workspace }}/ellekit
-          make deb
-          mv work-iphoneos-arm/stage packages/*.deb ${{ github.workspace }}/ellekit.deb
+          make
         env:
           THEOS: ${{ github.workspace }}/theos
 
