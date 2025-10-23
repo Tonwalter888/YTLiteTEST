@@ -143,9 +143,9 @@ jobs:
 
       - name: Build YTUHD
         run: |
-          cd ${{ github.workspace }}/YouTimeStamp
+          cd ${{ github.workspace }}/YTUHD
           make clean package FINALPACKAGE=1 SIDELOAD=1
-          mv packages/*.deb ${{ github.workspace }}/youts.deb
+          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
@@ -159,7 +159,15 @@ jobs:
             fi
           done
           
-          cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o almostfinish.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          mkdir -p removecydia
+          unzip -q almostfinish.ipa -d removecydia
+          find removecydia/Payload -name "CydiaSubstrate.framework" -exec rm -rf {} +
+          find removecydia/Payload -name "libsubstrate.dylib" -exec rm -f {} +
+          PLIST=removecydia/Payload/YouTube.app/Info.plist
+          /usr/libexec/PlistBuddy -c "Delete :DynamicLibraries:libsubstrate.dylib" "$PLIST" || true
+          cd removecydia
+          zip -qr ../YTLitePlusEXTRA_${{ env.YT_VERSION }}_v5.2b4.ipa Payload
 
       - name: Upload IPA to Catbox
         if: ${{ inputs.catbox_upload }}
