@@ -136,7 +136,10 @@ jobs:
       - name: Build ElleKit
         run: |
           cd ${{ github.workspace }}/ellekit
+          set -x
+          echo "::group::Build"
           make
+          echo "::endgroup::"
         env:
           THEOS: ${{ github.workspace }}/theos
 
