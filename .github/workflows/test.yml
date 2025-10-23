@@ -75,7 +75,7 @@ jobs:
           echo -e 'Done!'
 
       - name: Install Dependencies
-        run: brew install make ldid
+        run: brew install make ldid dpkg
 
       - name: Set PATH Environment Variable
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
