@@ -136,7 +136,7 @@ jobs:
       - name: Build ElleKit
         run: |
           cd ${{ github.workspace }}/ellekit
-          make clean package DEBUG=0 FINALPACKAGE=1 
+          make deb DEBUG=0 
           mv packages/*.deb ${{ github.workspace }}/ellekit.deb
         env:
           THEOS: ${{ github.workspace }}/theos
