@@ -159,7 +159,7 @@ jobs:
             fi
           done
           
-          cyan -i youtube.ipa -o almostfinish.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+          cyan -i youtube.ipa -o almostfinish.ipa -uwf $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
           mkdir -p removecydia
           unzip -q almostfinish.ipa -d removecydia
           find removecydia/Payload -name "CydiaSubstrate.framework" -exec rm -rf {} +
