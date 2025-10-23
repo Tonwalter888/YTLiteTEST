@@ -131,12 +131,13 @@ jobs:
 
       - name: Clone ElleKit
         run: |
-           git clone --quiet https://github.com/Tonwalter888/ellekit.git
+           git clone --quiet https://github.com/tealbathingsuit/ellekit.git
 
       - name: Build ElleKit
         run: |
           cd ${{ github.workspace }}/ellekit
           make deb
+          mv packages/*.deb ${{ github.workspace }}/ellekit.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
