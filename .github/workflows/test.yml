@@ -39,7 +39,7 @@ concurrency:
 jobs:
   build:
     name: Build and Release YTLitePlusEXTRA IPA
-    runs-on: macos-14
+    runs-on: macos-latest
     permissions:
       contents: write
 
@@ -122,39 +122,34 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install libundirect
+      - name: Clone YTVideoOverlay
         run: |
-           git clone --quiet https://github.com/opa334/libundirect.git
-           cd libundirect
-           mkdir -p $THEOS/include/libundirect
-           cp -f libundirect.h $THEOS/include/libundirect
-           wget --no-verbose https://github.com/coolstar/libhooker/raw/refs/heads/master/libhooker/include/libhooker.h
-           cp -f libhooker.h $THEOS/include
-           sed -i'' -e 's/16.2/16.5/g' Makefile
-           make clean 
-           make FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-           wget --no-verbose https://github.com/und3fined/uYouPlus/raw/refs/heads/und3fy/dylib/libundirect.dylib -O ${{ github.workspace }}/libundirect.dylib
-           wget --no-verbose https://github.com/und3fined/uYouPlus/raw/refs/heads/und3fy/dylib/libundirect.dylib -O $THEOS/lib/iphone/rootless/libundirect.dylib
-           echo "Successfully Installed libundirect"
+           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+
+      - name: Clone YouTimeStamp
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet https://github.com/Tonwalter888/YouTimeStamp.git
+
+      - name: Build YTVideoOverlay
+        run: |
+          cd ${{ github.workspace }}/YTVideoOverlay
+          make clean package FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YTUHD
+      - name: Build YouTimeStamp
         run: |
-          cd ${{ github.workspace }}
-          git clone --quiet https://github.com/PoomSmart/YTUHD.git
-
-      - name: Build YTUHD
-        run: |
-          cd ${{ github.workspace }}/YTUHD
-          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          cd ${{ github.workspace }}/YouTimeStamp
+          make clean package FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youts.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb libundirect.dylib"
+          tweaks="ytlite.deb"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
