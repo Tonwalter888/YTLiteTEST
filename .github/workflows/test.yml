@@ -143,7 +143,7 @@ jobs:
       
       - name: Build YTVideoOverlay
         run: |
-          cd ${{ github.workspace }}/YouPiP
+          cd ${{ github.workspace }}/YTVideoOverlay
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ytvo.deb
         env:
@@ -151,7 +151,7 @@ jobs:
 
       - name: Build YouSubscriptions
         run: |
-          cd ${{ github.workspace }}/YTUHD
+          cd ${{ github.workspace }}/YouSubscriptions
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/yousub.deb
         env:
