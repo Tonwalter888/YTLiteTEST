@@ -140,6 +140,11 @@ jobs:
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscriptions.git
+
+      - name: Clone YouSubscribe
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscribe.git
       
       - name: Build YTVideoOverlay
         run: |
@@ -162,6 +167,14 @@ jobs:
           cd ${{ github.workspace }}/YouShare
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/youshare.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouSubscribe
+        run: |
+          cd ${{ github.workspace }}/YouSubscribe
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youtest.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
