@@ -130,6 +130,11 @@ jobs:
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
+
+      - name: Clone YouLoop
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouLoop.git
            
       - name: Clone YTVideoOverlay
         run: |
@@ -150,6 +155,14 @@ jobs:
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
+
+      - name: Build YouLoop
+        run: |
+          cd ${{ github.workspace }}/YouLoop
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youloop.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
            
       - name: Build YTVideoOverlay
         run: |
