@@ -141,10 +141,10 @@ jobs:
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscriptions.git
 
-      - name: Clone YouSubscribe
+      - name: Clone YouTimeStamp
         run: |
            cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscribe.git
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouTimeStamp.git
 
       - name: Clone YTUHD
         run: |
@@ -175,11 +175,11 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Build YouSubscribe
+      - name: Build YouTimeStamp
         run: |
-          cd ${{ github.workspace }}/YouSubscribe
+          cd ${{ github.workspace }}/YouTimeStamp
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youtest.deb
+          mv packages/*.deb ${{ github.workspace }}/youts.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -190,7 +190,6 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
-
   
       - name: Inject Tweaks Into IPA
         run: |
