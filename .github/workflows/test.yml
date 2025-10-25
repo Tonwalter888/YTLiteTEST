@@ -145,7 +145,12 @@ jobs:
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YouSubscribe.git
-      
+
+      - name: Clone YTUHD
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
+           
       - name: Build YTVideoOverlay
         run: |
           cd ${{ github.workspace }}/YTVideoOverlay
@@ -177,6 +182,15 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/youtest.deb
         env:
           THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YTUHD
+        run: |
+          cd ${{ github.workspace }}/YTUHD
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
   
       - name: Inject Tweaks Into IPA
         run: |
