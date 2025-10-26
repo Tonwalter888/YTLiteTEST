@@ -146,6 +146,11 @@ jobs:
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YouTimeStamp.git
 
+      - name: Clone YTReload
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTReload.git
+
       - name: Build YouLoop
         run: |
           cd ${{ github.workspace }}/YouLoop
@@ -175,6 +180,14 @@ jobs:
           cd ${{ github.workspace }}/YouTimeStamp
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/youts.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YTReload
+        run: |
+          cd ${{ github.workspace }}/YTReload
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytreload.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
