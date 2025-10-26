@@ -126,36 +126,26 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YouShare
+      - name: Clone YTUHD
         run: |
            cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
-
-      - name: Clone YouLoop
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouLoop.git
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
            
       - name: Clone YTVideoOverlay
         run: |
           cd ${{ github.workspace }}
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-          
-      - name: Clone YouTimeStamp
-        run: |
-           cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouTimeStamp.git
 
       - name: Clone YTReload
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YTReload.git
 
-      - name: Build YouLoop
+      - name: Build YTReload
         run: |
-          cd ${{ github.workspace }}/YouLoop
+          cd ${{ github.workspace }}/YTReload
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youloop.deb
+          mv packages/*.deb ${{ github.workspace }}/ytreload.deb
         env:
           THEOS: ${{ github.workspace }}/theos
            
@@ -167,27 +157,11 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos    
 
-      - name: Build YouShare
+      - name: Build YTUHD
         run: |
-          cd ${{ github.workspace }}/YouShare
+          cd ${{ github.workspace }}/YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youshare.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build YouTimeStamp
-        run: |
-          cd ${{ github.workspace }}/YouTimeStamp
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/youts.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build YTReload
-        run: |
-          cd ${{ github.workspace }}/YTReload
-          make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/ytreload.deb
+          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
