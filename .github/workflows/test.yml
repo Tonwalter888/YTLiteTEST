@@ -131,7 +131,7 @@ jobs:
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
            cd YTUHD
-           git switch dev
+           git checkout dev
 
       - name: Build YTUHD
         run: |
