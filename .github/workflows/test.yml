@@ -19,6 +19,12 @@ on:
         default: true
         required: false
         type: boolean
+
+      catbox_upload:
+        description: "Upload IPA to Catbox.moe (URL)"
+        default: true
+        required: false
+        type: boolean
         
       draft_release:
         description: "Create a draft release (Private)"
@@ -39,7 +45,7 @@ jobs:
 
     steps:
       - name: Check Inputs
-        if: ${{ !inputs.upload_artifact && !inputs.draft_release }}
+        if: ${{ !inputs.upload_artifact && !inputs.draft_release && !inputs.catbox_upload }}
         run: |
           echo "No IPA output way selected. Please choose at least one."
           exit 1
@@ -47,7 +53,7 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,tweak_version,draft_release,upload_artifact
+          exclude_inputs: bundle_id,display_name,tweak_version,draft_release,upload_artifact,catbox_upload
           
       - name: Download and Validate IPA
         run: |
@@ -77,9 +83,9 @@ jobs:
         
       - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
-          cd sdks
-          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/xybp888/iOS-SDKs.git
+          cd iOS-SDKs
+          git sparse-checkout set --no-cone iPhoneOS18.6.sdk
           git checkout
           mv *.sdk $THEOS/sdks
         env:
@@ -111,6 +117,14 @@ jobs:
           echo "YTLITE_VERSION=$VERSION" >> $GITHUB_ENV
           echo -e 'Done!'
 
+      - name: Clone Open in YouTube (Safari Extension)
+        run: |
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
+          cd OpenYouTubeSafariExtension
+          git sparse-checkout set --no-cone OpenYouTubeSafariExtension.appex
+          git checkout
+          mv *.appex ${{ github.workspace }}
+
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
@@ -126,21 +140,226 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
+      - name: Clone YouPiP
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
+    
       - name: Clone YTUHD
         run: |
            cd ${{ github.workspace }}
-           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD.git
+           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
+
+      - name: Clone Return-YouTube-Dislikes
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
+
+      - name: Clone YouGroupSettings
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
+           
+      - name: Clone YTVideoOverlay
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
+          
+      - name: Clone YTABConfig
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
+                  
+      - name: Clone YouQuality
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
+
+      - name: Clone YouSpeed
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouSpeed.git
+
+      - name: Clone DontEatMyContent
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/therealFoxster/DontEatMyContent.git
+
+      - name: Clone IAmYouTube
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
+
+      - name: Clone YouMute
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouMute.git
+
+      - name: Clone YTABGoodies
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABGoodies.git
+
+      - name: Clone YouTimeStamp
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouTimeStamp.git
+    
+      - name: Clone YouLoop
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/Tonwalter888/YouLoop.git
+
+      - name: Clone Alderis
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
+
+      - name: Clone YouSlider
+        run: |
+           cd ${{ github.workspace }}
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouSlider.git
 
       - name: Clone YouChooseQuality
         run: |
            cd ${{ github.workspace }}
            git clone --quiet --depth=1 https://github.com/PoomSmart/YouChooseQuality.git
 
+      - name: Clone YTSilentVote
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTSilentVote.git
+
+      - name: Clone YouShare
+        run: |
+          cd ${{ github.workspace }}
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
+      
+      - name: Build YouPiP
+        run: |
+          cd ${{ github.workspace }}/YouPiP
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youpip.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos    
+
       - name: Build YTUHD
         run: |
           cd ${{ github.workspace }}/YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build Return-YouTube-Dislikes
+        run: |
+          cd ${{ github.workspace }}/Return-YouTube-Dislikes
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ryd.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouGroupSettings
+        run: |
+          cd ${{ github.workspace }}/YouGroupSettings
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ygs.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YTVideoOverlay
+        run: |
+          cd ${{ github.workspace }}/YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YTABConfig
+        run: |
+          cd ${{ github.workspace }}/YTABConfig
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytabconfig.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouQuality
+        run: |
+          cd ${{ github.workspace }}/YouQuality
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youquality.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouSpeed
+        run: |
+          cd ${{ github.workspace }}/YouSpeed
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youspeed.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build DontEatMyContent
+        run: |
+          cd ${{ github.workspace }}/DontEatMyContent
+          make clean package DEBUG=0 FINALPACKAGE=1 
+          mv packages/*.deb ${{ github.workspace }}/demc.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build IAmYouTube
+        run: |
+          cd ${{ github.workspace }}/IAmYouTube
+          make clean package DEBUG=0 FINALPACKAGE=1 
+          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouMute
+        run: |
+          cd ${{ github.workspace }}/YouMute
+          make clean package DEBUG=0 FINALPACKAGE=1 
+          mv packages/*.deb ${{ github.workspace }}/ym.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos 
+
+      - name: Build YTABGoodies
+        run: |
+          cd ${{ github.workspace }}/YTABGoodies
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytgoodab.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouTimeStamp
+        run: |
+          cd ${{ github.workspace }}/YouTimeStamp
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youts.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouLoop
+        run: |
+          cd ${{ github.workspace }}/YouLoop
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youloop.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouSlider
+        run: |
+          cd ${{ github.workspace }}/YouSlider
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youslider.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build Alderis
+        run: |
+          cd ${{ github.workspace }}/Alderis
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/alderis.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -152,9 +371,25 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
+      - name: Build YTSilentVote
+        run: |
+          cd ${{ github.workspace }}/YTSilentVote
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/ytnovote.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos  
+
+      - name: Build YouShare
+        run: |
+          cd ${{ github.workspace }}/YouShare
+          make clean package DEBUG=0 FINALPACKAGE=1
+          mv packages/*.deb ${{ github.workspace }}/youshare.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos  
+  
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb"
+          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
@@ -163,6 +398,16 @@ jobs:
           done
           
           cyan -i youtube.ipa -o YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ env.YTLITE_VERSION }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
+
+      - name: Upload IPA to Catbox
+        if: ${{ inputs.catbox_upload }}
+        run: |
+          RESPONSE=$(curl -F "reqtype=fileupload" -F "fileToUpload=@${{ github.workspace }}/YTLitePlusEXTRA_${{ env.YT_VERSION }}_v${{ env.YTLITE_VERSION }}.ipa" https://catbox.moe/user/api.php)
+          CATBOX_URL=$(echo $RESPONSE | grep -o -E 'https://files.catbox.moe/[^"]*')
+          echo "Uploaded artifact to $CATBOX_URL"
+          CATBOX_FILE=$(echo $CATBOX_URL | sed 's|https://files.catbox.moe/||')
+          echo "CATBOX_FILE=$CATBOX_FILE" >> $GITHUB_ENV
+          echo "CATBOX_URL=$CATBOX_URL" >> $GITHUB_ENV
 
       - name: Upload IPA as an Artifact
         if: ${{ inputs.upload_artifact }}
@@ -189,6 +434,11 @@ jobs:
         run: |
           echo -e '### 📦 Artifact Upload\n\nUpload IPA as an artifact successfully! [Scroll down](#artifacts) to view the artifact. Note that you must be signed in to GitHub to download it.' >> $GITHUB_STEP_SUMMARY
 
+      - name: Job Summary - Output the IPA URL (Catbox Upload)
+        if: ${{ inputs.catbox_upload }}
+        run: |
+          echo -e '### 🐱 Catbox Upload\n\nUpload IPA to Catbox successfully! Here is a permanent shareable link: '$CATBOX_URL >> $GITHUB_STEP_SUMMARY
+
       - name: Job Summary - Output a Draft Release Link
         if: ${{ inputs.draft_release }}
         run: |
@@ -196,4 +446,4 @@ jobs:
      
       - name: Job Summary - Cleanup
         run: |
-          echo -e '### 🧹 Cleanup\n\nYou can remove previous GitHub Action runs here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-workflows-run.yml' >> $GITHUB_STEP_SUMMARY
+          echo -e '### 🧹 Cleanup\n\nYou can remove previous GitHub Actions run here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-workflows-run.yml' >> $GITHUB_STEP_SUMMARY
