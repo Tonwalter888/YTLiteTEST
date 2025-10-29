@@ -358,7 +358,7 @@ jobs:
       - name: Build Alderis
         run: |
           cd ${{ github.workspace }}/Alderis
-          make clean package DEBUG=0 FINALPACKAGE=1 ROOTLESS=1
+          make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
         env:
           THEOS: ${{ github.workspace }}/theos
