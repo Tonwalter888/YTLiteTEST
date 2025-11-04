@@ -106,22 +106,15 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone PSHeader
+      - name: Clone YTAutoReload
         run: |
-           cd $THEOS/include
-           git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git
-        env:
-          THEOS: ${{ github.workspace }}/theos
+           git clone --quiet https://github.com/Tonwalter888/YTAutoReload.git
 
-      - name: Clone YTUHD
+      - name: Build YTAutoReload
         run: |
-           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
-
-      - name: Build YTUHD
-        run: |
-          cd YTUHD
+          cd YTAutoReload
           make clean package DEBUG=0 FINALPACKAGE=1
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          mv packages/*.deb ${{ github.workspace }}/reload.deb
         env:
           THEOS: ${{ github.workspace }}/theos 
   
