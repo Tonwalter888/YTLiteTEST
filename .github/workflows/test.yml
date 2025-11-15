@@ -123,9 +123,7 @@ jobs:
     
       - name: Clone YTUHD
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTUHD.git 
-          cd YTUHD
-          git switch dev
+          git clone --quiet https://github.com/Tonwalter888/YTUHD.git
 
       - name: Build YTUHD
         run: |
