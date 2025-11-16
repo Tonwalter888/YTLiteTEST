@@ -57,7 +57,7 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O ${{ github.workspace }}/youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O youtube.ipa
 
           ipa_type=$(file --mime-type -b ${{ github.workspace }}/youtube.ipa)
 
@@ -73,7 +73,7 @@ jobs:
           echo -e 'Done!'
 
       - name: Install Dependencies
-        run: brew install make ldid swiftlint
+        run: brew install make ldid
 
       - name: Set PATH Environment Variable
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
@@ -83,28 +83,26 @@ jobs:
         
       - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/xybp888/iOS-SDKs.git
-          cd iOS-SDKs
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/Tonwalter888/iOS-18.6-SDK.git
+          cd iOS-18.6-SDK
           git sparse-checkout set --no-cone iPhoneOS18.6.sdk
           git checkout
           mv *.sdk $THEOS/sdks
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install cyan and tbd
+      - name: Install cyan
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-          wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac -O /usr/local/bin/tbd
-          chmod +x /usr/local/bin/tbd
           wget --no-verbose https://github.com/dayanch96/YTLite/releases/download/v5.2b4/com.dvntm.ytlite_5.2b4_iphoneos-arm.deb -O ytlite.deb
 
-      - name: Clone Open in YouTube (Safari Extension)
+      - name: Get YTLite Version
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
-          cd OpenYouTubeSafariExtension
-          git sparse-checkout set --no-cone OpenYouTubeSafariExtension.appex
-          git checkout
-          mv *.appex ${{ github.workspace }}
+          ar x ytlite.deb control.tar.gz >/dev/null 2>&1
+          tar -xzf control.tar.gz ./control
+          VERSION=$(grep '^Version:' control | cut -d ' ' -f2)
+          echo "YTLITE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo -e 'Done!'
 
       - name: Clone YouTubeHeader
         run: |
@@ -123,19 +121,22 @@ jobs:
     
       - name: Clone YTUHD
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTUHD.git
+          git clone --quiet https://github.com/Tonwalter888/YTUHD_TEST.git
 
       - name: Build YTUHD
         run: |
-          cd YTUHD
-          make clean package DEBUG=0 FINALPACKAGE=1
+          cd YTUHD_TEST
+          make clean package DEBUG=0 FINALPACKAGE=1 SIDELOAD=1
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos 
+
+      - name: Download libundirect
+        run: wget --no-verbose https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm.deb -O libundirect.deb
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb OpenYouTubeSafariExtension.appex"
+          tweaks="ytlite.deb"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
