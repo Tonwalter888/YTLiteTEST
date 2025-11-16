@@ -57,7 +57,7 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O youtube.ipa
+          wget --no-verbose https://download843.mediafire.com/pnd38j9a8gagqQdpMBsLec-cInprXn5osNtcLFHM02muRC5j2kY4PlwBlJcbbm5BWU9kwnRFclywkt-oUZdhhKeuj-h8G_6ePWT8b2HSYkoraf3M5Ix5nTgcI3bVd9LL5c32LKXlPM7uJysmV8XtJtt0CVcFD26abHsQ8nXt1JUO/yifuxksoq4it1f9/com.google.ios.youtube-20.45.3-Decrypted.ipa -O youtube.ipa
 
           ipa_type=$(file --mime-type -b ${{ github.workspace }}/youtube.ipa)
 
