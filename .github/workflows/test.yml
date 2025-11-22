@@ -126,6 +126,7 @@ jobs:
       - name: Build YTUHD
         run: |
           cd YTUHD
+          git switch dev
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
