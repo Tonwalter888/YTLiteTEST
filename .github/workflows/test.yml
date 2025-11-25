@@ -124,7 +124,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/YTUHD.git
           cd $THEOS/lib
           wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-          cd
+          cd ${{ github.workspace }}
           wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
         env:
           THEOS: ${{ github.workspace }}/theos   
