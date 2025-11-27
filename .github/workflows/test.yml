@@ -121,13 +121,7 @@ jobs:
     
       - name: Clone YTUHD
         run: |
-          git clone --quiet https://github.com/PoomSmart/YTUHD.git
-          cd $THEOS/lib
-          wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-          cd ${{ github.workspace }}
-          wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-        env:
-          THEOS: ${{ github.workspace }}/theos   
+          git clone --quiet https://github.com/Tonwalter888/YTUHD_PS.git   
 
       - name: Build YTUHD
         run: |
@@ -139,7 +133,7 @@ jobs:
 
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="ytlite.deb libundirect.dylib"
+          tweaks="ytlite.deb"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
