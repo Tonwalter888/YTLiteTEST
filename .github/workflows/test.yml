@@ -94,7 +94,7 @@ jobs:
       - name: Install cyan
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-          wget --no-verbose https://github.com/dayanch96/YTLite/releases/download/v5.2b4/com.dvntm.ytlite_5.2b4_iphoneos-arm64.deb -O ytlite.deb
+          wget --no-verbose https://github.com/dayanch96/YTLite/releases/download/v5.2b4/com.dvntm.ytlite_5.2b4_iphoneos-arm64e.deb -O ytlite.deb
 
       - name: Get YTLite Version
         run: |
@@ -121,13 +121,12 @@ jobs:
     
       - name: Clone YTUHD
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTUHD.git   
+          git clone --quiet https://github.com/PoomSmart/YTUHD.git   
 
       - name: Build YTUHD
         run: |
           cd YTUHD
-          git switch dev
-          make clean package DEBUG=0 FINALPACKAGE=1
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide SIDELOAD=1
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos 
