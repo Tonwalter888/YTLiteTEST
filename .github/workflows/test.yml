@@ -20,12 +20,6 @@ on:
         required: true
         type: string
 
-      upload_artifact:
-        description: "Upload IPA as an Artifact (Public)"
-        default: true
-        required: false
-        type: boolean
-
       catbox_upload:
         description: "Upload IPA to Catbox.moe (URL)"
         default: true
@@ -51,7 +45,7 @@ jobs:
 
     steps:
       - name: Check Inputs
-        if: ${{ !inputs.upload_artifact && !inputs.draft_release && !inputs.catbox_upload }}
+        if: ${{ !inputs.draft_release && !inputs.catbox_upload }}
         run: |
           echo "No IPA output way selected. Please choose at least one."
           exit 1
@@ -59,15 +53,15 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,draft_release,upload_artifact,catbox_upload
+          exclude_inputs: bundle_id,display_name,draft_release,catbox_upload
           
       - name: Download and Validate IPA
         run: |
           wget ${{ inputs.ipa_url }} --no-verbose -O youtube.ipa
 
-          file_type=$(file --mime-type -b youtube.ipa)
+          ipa_type=$(file --mime-type -b youtube.ipa)
 
-          if [[ "$file_type" != "application/x-ios-app" && "$file_type" != "application/zip" ]]; then
+          if [[ "$ipa_type" != "application/x-ios-app" && "$ipa_type" != "application/zip" ]]; then
             echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
             exit 1
           fi
@@ -401,13 +395,6 @@ jobs:
           echo "CATBOX_FILE=$CATBOX_FILE" >> $GITHUB_ENV
           echo "CATBOX_URL=$CATBOX_URL" >> $GITHUB_ENV
 
-      - name: Upload IPA as an Artifact
-        if: ${{ inputs.upload_artifact }}
-        uses: actions/upload-artifact@v5
-        with:
-          name: WaterTest_${{ env.YT_VERSION }}
-          path: WaterTest_${{ env.YT_VERSION }}.ipa
-
       - name: Create a Draft Release
         if: ${{ inputs.draft_release }}
         uses: softprops/action-gh-release@v2.4.2
@@ -420,11 +407,6 @@ jobs:
       - name: Job Summary - Build Conplete
         run: |
           echo -e '### 🛠️ Build Test IPA Complete!' >> $GITHUB_STEP_SUMMARY
-
-      - name: Job Summary - Output the Artifact Upload
-        if: ${{ inputs.upload_artifact }}
-        run: |
-          echo -e '### 📦 Artifact Upload\n\nUpload IPA as an artifact successfully! Refresh and [Scroll down](#artifacts) to view the artifact. Note that you must be signed in to GitHub to download it.' >> $GITHUB_STEP_SUMMARY
 
       - name: Job Summary - Output the IPA URL (Catbox Upload)
         if: ${{ inputs.catbox_upload }}
