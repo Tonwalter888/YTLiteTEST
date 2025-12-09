@@ -9,7 +9,7 @@ concurrency:
 jobs:
   build:
     name: Build Alderis
-    runs-on: macos-latest
+    runs-on: macos-l3
     permissions:
       contents: write
 
