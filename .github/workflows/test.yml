@@ -1,36 +1,6 @@
-name: Build Test IPA
+name: Build Alderis
 on:
   workflow_dispatch:
-    inputs:
-      ipa_url:
-        description: "URL to the decrypted IPA file"
-        default: ""
-        required: true
-        type: string
-
-      display_name:
-        description: "App Name (Optional)"
-        default: "YouTube"
-        required: true
-        type: string
-
-      bundle_id:
-        description: "BundleID (Optional)"
-        default: "com.google.ios.youtube"
-        required: true
-        type: string
-
-      catbox_upload:
-        description: "Upload IPA to Catbox.moe (URL)"
-        default: true
-        required: false
-        type: boolean
-        
-      draft_release:
-        description: "Create a draft release (Private)"
-        default: true
-        required: false
-        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,40 +8,12 @@ concurrency:
 
 jobs:
   build:
-    name: Build Test IPA
+    name: Build Alderis
     runs-on: macos-latest
     permissions:
       contents: write
 
     steps:
-      - name: Check Inputs
-        if: ${{ !inputs.draft_release && !inputs.catbox_upload }}
-        run: |
-          echo "No IPA output way selected. Please choose at least one."
-          exit 1
-
-      - name: Hide Sensitive Inputs
-        uses: levibostian/action-hide-sensitive-inputs@v1
-        with:
-          exclude_inputs: bundle_id,display_name,draft_release,catbox_upload
-          
-      - name: Download and Validate IPA
-        run: |
-          wget ${{ inputs.ipa_url }} --no-verbose -O youtube.ipa
-
-          ipa_type=$(file --mime-type -b youtube.ipa)
-
-          if [[ "$ipa_type" != "application/x-ios-app" && "$ipa_type" != "application/zip" ]]; then
-            echo "::error::Validation failed: The downloaded file is not a valid IPA. Detected type: $file_type."
-            exit 1
-          fi
-
-      - name: Get YouTube Version 
-        run: |
-          unzip -q youtube.ipa -d ytextracted
-          echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
-          echo -e 'Done!'
-
       - name: Install Dependencies
         run: brew install make ldid swiftlint
 
@@ -91,125 +33,17 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Install cyan and tbd
+      - name: Install tbd
         run: |
-          pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+          wget --no-verbose https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac -O /usr/local/bin/tbd
+          chmod +x /usr/local/bin/tbd 
           
-      - name: Clone YouTubeHeader
-        run: |
-           cd $THEOS/include
-           git clone --quiet https://github.com/PoomSmart/YouTubeHeader.git
-           cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Clone PSHeader
-        run: |
-           cd $THEOS/include
-           git clone --quiet https://github.com/PoomSmart/PSHeader.git
-        env:
-          THEOS: ${{ github.workspace }}/theos
-          
-      - name: Clone YTUHD
-        run: git clone --quiet https://github.com/Tonwalter888/YTUHD_PS.git
+      - name: Clone Alderis
+        run: git clone --quiet https://github.com/hbang/Alderis.git
            
-      - name: Clone IAmYouTube
-        run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
-
-      - name: Clone YouTube-X
-        run: git clone --quiet https://github.com/PoomSmart/YouTube-X.git
-
-      - name: Clone NoYTPremium
-        run: git clone --quiet https://github.com/PoomSmart/NoYTPremium.git 
-
-      - name: Clone YouChooseQuality
-        run: git clone --quiet https://github.com/PoomSmart/YouChooseQuality.git 
-
-      - name: Build YTUHD
+      - name: Build Alderis
         run: |
-          cd YTUHD_PS
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          cd Alderis
+          make clean package DEBUG=0 FINALPACKAGE=1 ROOTLESS=1
         env:
           THEOS: ${{ github.workspace }}/theos
-      
-      - name: Build IAmYouTube
-        run: |
-          cd IAmYouTube
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/imyt.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos   
-
-      - name: Build YouTube-X
-        run: |
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build NoYTPremium
-        run: |
-          cd NoYTPremium
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/noytpre.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build  YouChooseQuality
-        run: |
-          cd YouChooseQuality
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-  
-      - name: Inject Tweaks Into IPA
-        run: |
-          tweaks=""
-
-          for f in *.deb; do
-            if [ -f "$f" ]; then
-              tweaks="$tweaks $f"
-            fi
-          done
-          
-          cyan -i youtube.ipa -o WaterTest_${{ env.YT_VERSION }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
-
-      - name: Upload IPA to Catbox
-        if: ${{ inputs.catbox_upload }}
-        run: |
-          RESPONSE=$(curl -F "reqtype=fileupload" -F "fileToUpload=@WaterTest_${{ env.YT_VERSION }}.ipa" https://catbox.moe/user/api.php)
-          CATBOX_URL=$(echo $RESPONSE | grep -o -E 'https://files.catbox.moe/[^"]*')
-          echo "Uploaded artifact to $CATBOX_URL"
-          CATBOX_FILE=$(echo $CATBOX_URL | sed 's|https://files.catbox.moe/||')
-          echo "CATBOX_FILE=$CATBOX_FILE" >> $GITHUB_ENV
-          echo "CATBOX_URL=$CATBOX_URL" >> $GITHUB_ENV
-
-      - name: Create a Draft Release
-        if: ${{ inputs.draft_release }}
-        uses: softprops/action-gh-release@v2.4.2
-        with:
-          tag_name: ytliteplusextra-ipa${{ github.run_number }}
-          name: WaterTest_${{ env.YT_VERSION }} (${{ github.run_number }}) 
-          files: WaterTest_${{ env.YT_VERSION }}.ipa
-          draft: true
-
-      - name: Job Summary - Build Conplete
-        run: |
-          echo -e '### 🛠️ Build Test IPA Complete!' >> $GITHUB_STEP_SUMMARY
-
-      - name: Job Summary - Output the IPA URL (Catbox Upload)
-        if: ${{ inputs.catbox_upload }}
-        run: |
-          echo -e '### 🐱 Catbox Upload\n\nUpload IPA to Catbox successfully! Here is a permanent shareable link: '$CATBOX_URL >> $GITHUB_STEP_SUMMARY
-
-      - name: Job Summary - Output a Draft Release Link
-        if: ${{ inputs.draft_release }}
-        run: |
-          echo -e '### 🚀 Draft Release\n\nDraft release has been created successfully! You can view your release here: https://github.com/${{ github.repository }}/releases' >> $GITHUB_STEP_SUMMARY
-     
-      - name: Job Summary - Cleanup
-        run: |
-          echo -e '### 🧹 Cleanup\n\nYou can remove previous GitHub Actions run here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-workflows-run.yml And if you want to delelte old draft releases you have then here: https://github.com/${{ github.repository }}/actions/workflows/delete-old-draft-releases.yml' >> $GITHUB_STEP_SUMMARY
