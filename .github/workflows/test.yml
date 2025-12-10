@@ -102,6 +102,9 @@ jobs:
 
       - name: Clone YouPiP
         run: git clone --quiet https://github.com/PoomSmart/YouPiP.git
+
+      - name: Clone YTVideoOverlay
+        run: git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           
       - name: Build YouTube-X
         run: |
