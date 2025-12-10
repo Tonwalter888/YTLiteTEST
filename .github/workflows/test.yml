@@ -90,14 +90,32 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
+      - name: Clone PSHeader
+        run: |
+           cd $THEOS/include
+           git clone --quiet https://github.com/PoomSmart/PSHeader.git
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
       - name: Clone YouTube-X
         run: git clone --quiet https://github.com/Tonwalter888/YouTube-X.git
+
+      - name: Clone YouPiP
+        run: git clone --quiet https://github.com/PoomSmart/YouPiP.git
           
       - name: Build YouTube-X
         run: |
           cd YouTube-X
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/x.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YouPiP
+        run: |
+          cd YouPiP
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/pip.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
