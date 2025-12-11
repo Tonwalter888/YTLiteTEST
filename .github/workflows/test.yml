@@ -83,8 +83,8 @@ jobs:
       - name: Install cyan
         run: |
            pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-           wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-
+           wget --no-verbose https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb
+           
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
@@ -134,7 +134,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="libundirect.dylib"
+          tweaks=""
 
           for f in *.deb; do
             if [ -f "$f" ]; then
