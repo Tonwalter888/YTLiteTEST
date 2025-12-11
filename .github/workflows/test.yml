@@ -81,7 +81,9 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Install cyan
-        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+        run: |
+           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+           wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
 
       - name: Clone YouTubeHeader
         run: |
@@ -132,7 +134,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks=""
+          tweaks="libundirect.dylib"
 
           for f in *.deb; do
             if [ -f "$f" ]; then
