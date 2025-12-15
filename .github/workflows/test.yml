@@ -111,8 +111,8 @@ jobs:
       - name: Install linundirect
         run: |
           cd libundirect
-          chmod +x install_to_theos.sh
-          ./install_to_theos.sh
+          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/libundirect.deb
         env:
           THEOS: ${{ github.workspace }}/theos
           
