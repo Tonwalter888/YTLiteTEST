@@ -81,10 +81,8 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Install cyan
-        run: |
-           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-           git clone --quiet https://github.com/Tonwalter888/libundirect.git
-           
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+         
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
@@ -105,16 +103,8 @@ jobs:
       - name: Clone IAmYouTube
         run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
         
-      - name: Clone YTUHD
-        run: git clone --quiet https://github.com/Tonwalter888/YTUHD_PS.git
-
-      - name: Install linundirect
-        run: |
-          cd libundirect
-          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/libundirect.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
+      - name: Clone YouShare
+        run: git clone --quiet https://github.com/Tonwalter888/YouShare.git
           
       - name: Build YouTube-X
         run: |
@@ -132,11 +122,12 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Build YTUHD
+      - name: Build YouShare
         run: |
-          cd YTUHD_PS
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
-          mv packages/*.deb ${{ github.workspace }}/uhd.deb
+          cd YouShare
+          git switch chatgpt
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/share.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
