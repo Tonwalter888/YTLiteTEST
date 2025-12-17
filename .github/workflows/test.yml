@@ -1,6 +1,6 @@
 name: Build Test IPA
 on:
-  workflow_dispatch:
+ workflow_dispatch:
     inputs:
       display_name:
         description: "App Name (Optional)"
@@ -136,7 +136,6 @@ jobs:
       - name: Build YouShare
         run: |
           cd YouShare
-          git switch chatgpt
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/share.deb
         env:
