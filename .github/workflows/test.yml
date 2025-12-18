@@ -14,18 +14,6 @@ on:
         required: true
         type: string
 
-      catbox_upload:
-        description: "Upload IPA to Catbox.moe (URL)"
-        default: true
-        required: false
-        type: boolean
-        
-      draft_release:
-        description: "Create a draft release (Private)"
-        default: true
-        required: false
-        type: boolean
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -46,7 +34,7 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube-19.47.7-Decrypted/com.google.ios.youtube-19.47.7-Decrypted.ipa --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
@@ -154,18 +142,7 @@ jobs:
           
           cyan -i youtube.ipa -o WaterTest_${{ env.YT_VERSION }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
-      - name: Upload IPA to Catbox
-        if: ${{ inputs.catbox_upload }}
-        run: |
-          RESPONSE=$(curl -F "reqtype=fileupload" -F "fileToUpload=@WaterTest_${{ env.YT_VERSION }}.ipa" https://catbox.moe/user/api.php)
-          CATBOX_URL=$(echo $RESPONSE | grep -o -E 'https://files.catbox.moe/[^"]*')
-          echo "Uploaded artifact to $CATBOX_URL"
-          CATBOX_FILE=$(echo $CATBOX_URL | sed 's|https://files.catbox.moe/||')
-          echo "CATBOX_FILE=$CATBOX_FILE" >> $GITHUB_ENV
-          echo "CATBOX_URL=$CATBOX_URL" >> $GITHUB_ENV
-
       - name: Create a Draft Release
-        if: ${{ inputs.draft_release }}
         uses: softprops/action-gh-release@v2.4.2
         with:
           tag_name: test-ipa${{ github.run_number }}
@@ -176,11 +153,6 @@ jobs:
       - name: Job Summary - Build Conplete
         run: |
           echo -e '### 🛠️ Build Test IPA Complete!' >> $GITHUB_STEP_SUMMARY
-
-      - name: Job Summary - Output the IPA URL (Catbox Upload)
-        if: ${{ inputs.catbox_upload }}
-        run: |
-          echo -e '### 🐱 Catbox Upload\n\nUpload IPA to Catbox successfully! Here is a permanent shareable link: '$CATBOX_URL >> $GITHUB_STEP_SUMMARY
 
       - name: Job Summary - Output a Draft Release Link
         if: ${{ inputs.draft_release }}
