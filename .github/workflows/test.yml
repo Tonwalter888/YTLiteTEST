@@ -4,13 +4,13 @@ on:
     inputs:
       display_name:
         description: "App Name (Optional)"
-        default: "YouTube"
+        default: "WaterTest"
         required: true
         type: string
 
       bundle_id:
         description: "BundleID (Optional)"
-        default: "com.google.ios.youtube"
+        default: "com.watertest.youtube"
         required: true
         type: string
 
@@ -46,7 +46,7 @@ jobs:
           
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-19.47.7-Decrypted/com.google.ios.youtube-19.47.7-Decrypted.ipa --no-verbose -O youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
