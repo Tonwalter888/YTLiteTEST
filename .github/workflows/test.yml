@@ -25,13 +25,7 @@ jobs:
     permissions:
       contents: write
 
-    steps:
-      - name: Check Inputs
-        if: ${{ !inputs.draft_release && !inputs.catbox_upload }}
-        run: |
-          echo "No IPA output way selected. Please choose at least one."
-          exit 1
-          
+    steps:        
       - name: Download and Validate IPA
         run: |
           wget https://archive.org/download/com.google.ios.youtube-19.47.7-Decrypted/com.google.ios.youtube-19.47.7-Decrypted.ipa --no-verbose -O youtube.ipa
