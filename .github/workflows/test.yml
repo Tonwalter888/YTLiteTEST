@@ -85,25 +85,14 @@ jobs:
       - name: Clone IAmYouTube
         run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
         
-      - name: Clone YouShare
-        run: git clone --quiet https://github.com/Tonwalter888/YouShare.git
+      - name: Clone YTUHD
+        run: git clone --quiet https://github.com/PoomSmart/YTUHD.git
 
-      - name: Clone YTVideoOverlay
-        run: git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
-          
-      - name: Build YouTube-X
+      - name: Build YTUHD
         run: |
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/x.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build YTVideoOverlay
-        run: |
-          cd YTVideoOverlay
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+          cd YTUHD
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
+          mv packages/*.deb ${{ github.workspace }}/uhd.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -115,12 +104,11 @@ jobs:
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Build YouShare
+      - name: Build YouTube-X
         run: |
-          cd YouShare
-          git switch chatgpt-ytmenu
+          cd YouTube-X
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/share.deb
+          mv packages/*.deb ${{ github.workspace }}/x.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
