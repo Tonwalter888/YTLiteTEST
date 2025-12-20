@@ -85,16 +85,18 @@ jobs:
       - name: Clone IAmYouTube
         run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
         
-      - name: Clone YTUHD
-        run: git clone --quiet https://github.com/PoomSmart/YTUHD.git
+      - name: Clone YouShare
+        run: git clone --quiet https://github.com/Tonwalter888/YouShare.git
 
-      - name: Build YTUHD
+      - name: Clone YTVideoOverlay
+        run: git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+
+      - name: Build YouShare
         run: |
-          wget --no-verbose https://files.catbox.moe/opubgx.dylib -O libundirect.dylib
-          cp -r libundirect.dylib $THEOS/lib/iphone/rootless
-          cd YTUHD
+          cd YouShare
+          git switch pre-main
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/uhd.deb
+          mv packages/*.deb ${{ github.workspace }}/share.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
@@ -111,6 +113,14 @@ jobs:
           cd YouTube-X
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/x.deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
+
+      - name: Build YTVideoOverlay
+        run: |
+          cd YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
         env:
           THEOS: ${{ github.workspace }}/theos
   
