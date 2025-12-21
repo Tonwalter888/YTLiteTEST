@@ -126,7 +126,7 @@ jobs:
   
       - name: Inject Tweaks Into IPA
         run: |
-          tweaks="libundirect.dylib"
+          tweaks=""
 
           for f in *.deb; do
             if [ -f "$f" ]; then
@@ -137,7 +137,7 @@ jobs:
           cyan -i youtube.ipa -o WaterTest_${{ env.YT_VERSION }}.ipa -uwef $tweaks -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
 
       - name: Create a Draft Release
-        uses: softprops/action-gh-release@v2.4.2
+        uses: softprops/action-gh-release@v2.5.0
         with:
           tag_name: test-ipa${{ github.run_number }}
           name: WaterTest_${{ env.YT_VERSION }} (${{ github.run_number }}) 
