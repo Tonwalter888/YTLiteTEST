@@ -80,7 +80,7 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone YouTube-X
-        run: git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+        run: git clone --quiet --single-branch https://github.com/PoomSmart/YouTube-X.git 
 
       - name: Clone IAmYouTube
         run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
@@ -90,15 +90,6 @@ jobs:
 
       - name: Clone YTVideoOverlay
         run: git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
-
-      - name: Build YouShare
-        run: |
-          cd YouShare
-          git switch pre-main
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/share.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
 
       - name: Build IAmYouTube
         run: |
