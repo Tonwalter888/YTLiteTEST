@@ -80,16 +80,16 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone YouTube-X
-        run: git clone --quiet --single-branch https://github.com/PoomSmart/YouTube-X.git 
+        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YouTube-X.git 
 
       - name: Clone IAmYouTube
-        run: git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/IAmYouTube.git
         
       - name: Clone YouShare
-        run: git clone --quiet https://github.com/Tonwalter888/YouShare.git
+        run: git clone --quiet --single-branch --filter=blob:none https://github.com/Tonwalter888/YouShare.git
 
       - name: Clone YTVideoOverlay
-        run: git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YTVideoOverlay.git
 
       - name: Build IAmYouTube
         run: |
