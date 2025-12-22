@@ -68,14 +68,14 @@ jobs:
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
-           git clone --quiet https://github.com/PoomSmart/YouTubeHeader.git
+           git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YouTubeHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone PSHeader
         run: |
            cd $THEOS/include
-           git clone --quiet https://github.com/PoomSmart/PSHeader.git
+           git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/PSHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
