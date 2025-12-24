@@ -28,7 +28,7 @@ jobs:
     steps:        
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-19.47.7-Decrypted/com.google.ios.youtube-19.47.7-Decrypted.ipa --no-verbose -O youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
@@ -41,7 +41,6 @@ jobs:
         run: |
           unzip -q youtube.ipa -d ytextracted
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
-          echo -e 'Done!'
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -50,7 +49,7 @@ jobs:
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Clone Theos
-        run: git clone --quiet --recurse-submodules https://github.com/theos/theos.git
+        run: git clone --quiet --depth=1 --single-branch --no-tags --recurse-submodules https://github.com/theos/theos.git
            
       - name: Download iOS SDK
         run: |
@@ -68,34 +67,32 @@ jobs:
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
-           git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YouTubeHeader.git
+           git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone PSHeader
         run: |
            cd $THEOS/include
-           git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/PSHeader.git
+           git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/PSHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone YouTube-X
-        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YouTube-X.git 
-
-      - name: Clone IAmYouTube
-        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/IAmYouTube.git
+        run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YouTube-X.git
         
       - name: Clone YouShare
-        run: git clone --quiet --single-branch --filter=blob:none https://github.com/Tonwalter888/YouShare.git
+        run: git clone --quiet --single-branch --depth=1 https://github.com/Tonwalter888/YouShare.git
 
       - name: Clone YTVideoOverlay
-        run: git clone --quiet --single-branch --filter=blob:none https://github.com/PoomSmart/YTVideoOverlay.git
+        run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
 
-      - name: Build IAmYouTube
+      - name: Build YouShare
         run: |
-          cd IAmYouTube
+          cd YouShare
+					git switch pre-main
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+          mv packages/*.deb ${{ github.workspace }}/share.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
