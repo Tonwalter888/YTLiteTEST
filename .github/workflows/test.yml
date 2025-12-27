@@ -85,7 +85,6 @@ jobs:
         run: |
           git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD_PS.git
           git clone --quiet https://github.com/Tonwalter888/libundirect.git
-          git clone --quiet https://github.com/coolstar/libhooker.git
           wget --no-verbose https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb
           cd libundirect
           git switch ytuhd
@@ -98,10 +97,6 @@ jobs:
           cd YTUHD_PS
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
           mv packages/*.deb ${{ github.workspace }}/uhd.deb
-          cd ..
-          cd libhooker
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/libhooker.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
