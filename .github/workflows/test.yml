@@ -28,7 +28,7 @@ jobs:
     steps:        
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube_20.25.4_und3fined/com.google.ios.youtube_20.25.4_und3fined.ipa --no-verbose -O youtube.ipa
+          wget "https://2012.filemail.com/api/file/get?filekey=1qsmDIRCXSh4nj5eR0qs4DmqLxvy689ta0hNeAkFzi2fqKG1ji27boekZIbYj0hpPGeVJj4TbL67LP5zz2_H1AuB5OhHLKlKeP9bTYfV" --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
