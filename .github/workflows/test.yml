@@ -28,7 +28,7 @@ jobs:
     steps:        
       - name: Download and Validate IPA
         run: |
-          wget https://archive.org/download/com.google.ios.youtube-19.47.7-Decrypted/com.google.ios.youtube-19.47.7-Decrypted.ipa --no-verbose -O youtube.ipa
+          wget https://archive.org/download/com.google.ios.youtube_20.25.4_und3fined/com.google.ios.youtube_20.25.4_und3fined.ipa --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
@@ -81,22 +81,23 @@ jobs:
       - name: Clone YouTube-X
         run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YouTube-X.git
 
-      - name: Clone YTUHD
+      - name: Clone YouPiP & YTVideoErrorAlert
         run: |
-          git clone --quiet --depth=1 https://github.com/Tonwalter888/YTUHD_PS.git
-          git clone --quiet https://github.com/Tonwalter888/libundirect.git
-          wget --no-verbose https://github.com/opa334/opa334.github.io/raw/refs/heads/master/debs/com.opa334.libundirect_1.1.6_iphoneos-arm64.deb
-          cd libundirect
-          git switch ytuhd
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
 
       - name: Clone IAmYouTube
         run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/IAmYouTube.git
 
-      - name: Build YTUHD
+      - name: Build YouPiP
         run: |
-          cd YTUHD_PS
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
-          mv packages/*.deb ${{ github.workspace }}/uhd.deb
+          cd YouPiP
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/pip.deb
+          cd ..
+          cd YTVideoErrorAlert
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/videoerror.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
