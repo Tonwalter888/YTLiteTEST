@@ -85,6 +85,7 @@ jobs:
         run: |
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
 
       - name: Clone IAmYouTube
         run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/IAmYouTube.git
@@ -98,6 +99,10 @@ jobs:
           cd YTVideoErrorAlert
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/videoerror.deb
+          cd ..
+          cd YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
