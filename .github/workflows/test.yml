@@ -28,7 +28,7 @@ jobs:
     steps:        
       - name: Download and Validate IPA
         run: |
-          wget "https://2012.filemail.com/api/file/get?filekey=1qsmDIRCXSh4nj5eR0qs4DmqLxvy689ta0hNeAkFzi2fqKG1ji27boekZIbYj0hpPGeVJj4TbL67LP5zz2_H1AuB5OhHLKlKeP9bTYfV" --no-verbose -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube_20.25.4_und3fined/com.google.ios.youtube_20.25.4_und3fined.ipa" --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
@@ -86,7 +86,8 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouChooseQuality.git
+          
       - name: Clone IAmYouTube
         run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/IAmYouTube.git
 
@@ -103,6 +104,10 @@ jobs:
           cd YTVideoOverlay
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+          cd ..
+          cd YouChooseQuality
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
