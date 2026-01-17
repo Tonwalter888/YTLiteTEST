@@ -79,7 +79,10 @@ jobs:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone YTFlags
-        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
+        run: |
+          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
+          cd YTFlags 
+          git checkout d6e7a3e6875632bea8bd18bfb06584c5213047f6
 
       - name: Clone IAmYouTube
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
