@@ -28,7 +28,7 @@ jobs:
     steps:        
       - name: Download and Validate IPA
         run: |
-          wget "https://archive.org/download/com.google.ios.youtube_20.25.4_und3fined/com.google.ios.youtube_20.25.4_und3fined.ipa" --no-verbose -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose -O youtube.ipa
 
           file_type=$(file --mime-type -b youtube.ipa)
 
@@ -49,7 +49,7 @@ jobs:
         run: echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
 
       - name: Clone Theos
-        run: git clone --quiet --depth=1 --single-branch --no-tags --recurse-submodules https://github.com/theos/theos.git
+        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
            
       - name: Download iOS SDK
         run: |
@@ -67,55 +67,28 @@ jobs:
       - name: Clone YouTubeHeader
         run: |
            cd $THEOS/include
-           git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
       - name: Clone PSHeader
         run: |
            cd $THEOS/include
-           git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/PSHeader.git
+           git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git
         env:
           THEOS: ${{ github.workspace }}/theos
 
-      - name: Clone YouTube-X
-        run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/YouTube-X.git
+      - name: Clone YTFlags
+        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
 
-      - name: Clone YouPiP & YTVideoErrorAlert
-        run: |
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouChooseQuality.git
-          
       - name: Clone IAmYouTube
-        run: git clone --quiet --single-branch --depth=1 https://github.com/PoomSmart/IAmYouTube.git
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
 
-      - name: Build YouPiP
+      - name: Build YTFlags
         run: |
-          cd YouPiP
+          cd YTFlags
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/pip.deb
-          cd ..
-          cd YTVideoErrorAlert
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/videoerror.deb
-          cd ..
-          cd YTVideoOverlay
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
-          cd ..
-          cd YouChooseQuality
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
-        env:
-          THEOS: ${{ github.workspace }}/theos
-
-      - name: Build YouTube-X
-        run: |
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/x.deb
+          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
         env:
           THEOS: ${{ github.workspace }}/theos
 
