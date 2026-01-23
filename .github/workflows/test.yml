@@ -15,7 +15,7 @@ jobs:
 
     steps:        
       - name: Download Ventoy
-        run: wget "https://sf-west-interserver-1.dl.sourceforge.net/project/ventoy/v1.1.10/ventoy-1.1.10-windows.zip?viasf=1"
+        run: wget "https://sf-west-interserver-1.dl.sourceforge.net/project/ventoy/v1.1.10/ventoy-1.1.10-windows.zip?viasf=1" -O ventoy-1.1.10-windows.zip
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
