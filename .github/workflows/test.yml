@@ -24,7 +24,5 @@ jobs:
           name: Ventoy v1.1.10 (${{ github.run_number }}) 
           files: ventoy-1.1.10-windows.zip
           draft: true
-          files: WaterTest_${{ env.YT_VERSION }}.ipa
-          draft: true
 
     
