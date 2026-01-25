@@ -134,7 +134,7 @@ jobs:
             fi
           done
           
-          cyan -i youtube.ipa -o WaterTest_YTweaks.ipa -uwef $tweaks
+          cyan -i youtube.ipa -o WaterTest_YTweaks.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
