@@ -24,8 +24,10 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v6.0.1
+      - name: Clone YTweaks
+        run: |
+          git clone https://github.com/Tonwalter888/YTweaks.git
+          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -89,6 +91,9 @@ jobs:
           git checkout
           mv *.sdk $THEOS/sdks
 
+      - name: Install cyan
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+
       - name: Clone YouTubeHeader
         run: |
           if [ -d "$THEOS/include/YouTubeHeader" ]; then
@@ -115,6 +120,26 @@ jobs:
 
       - name: Build YTweaks (rootless)
         run: |
+          cd YTweaks
           echo "Building YTweaks (rootless)..."
           make clean package DEBUG=0 FINALPACKAGE=1 ROOTLESS=1
           mv packages/*.deb ${{ github.workspace }}/ytwks_rtls.deb
+
+      - name: Inject Tweaks Into IPA
+        run: |
+          tweaks=""
+          for f in *.deb; do
+            if [ -f "$f" ]; then
+              tweaks="$tweaks $f"
+            fi
+          done
+          
+          cyan -i youtube.ipa -o WaterTest_YTweaks.ipa -uwef $tweaks
+          
+      - name: Create a Draft Release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          tag_name: watertest-ipa${{ github.run_number }}
+          name: WaterTest_YTweaks (${{ github.run_number }}) 
+          files: WaterTest_YTweaks.ipa
+          draft: true
