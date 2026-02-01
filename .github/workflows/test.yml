@@ -1,4 +1,4 @@
-name: Build YTweaks .deb packages
+name: Build
 on:
   workflow_dispatch:
     inputs:
@@ -10,7 +10,7 @@ on:
           - 17.5
           - 18.6
         required: true
-        default: 16.5
+        default: 18.6
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,15 +18,15 @@ concurrency:
 
 jobs:
   build:
-    name: Build YTweaks .deb packages
+    name: Build
     runs-on: macos-latest
     permissions:
       contents: write
 
     steps:
-      - name: Clone YTweaks
+      - name: Clone YTIcons
         run: |
-          git clone https://github.com/Tonwalter888/YTweaks.git
+          git clone https://github.com/PoomSmart/YTIcons.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -37,57 +37,18 @@ jobs:
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
 
-      - name: Get Theos commit hash
-        id: get_theos_commit
-        run: |
-          get_commit_hash() {
-            local repo_url=$1
-            git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
-          }
-          
-          THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos.git")
-          echo "theos=$THEOS_COMMIT" >> $GITHUB_OUTPUT
-          echo "Theos commit: $THEOS_COMMIT"
-
-      - name: Cache Theos
-        id: theos
-        uses: actions/cache@v5.0.2
-        with:
-          path: theos/
-          key: theos_${{ steps.get_theos_commit.outputs.theos }}_${{ inputs.sdk_version }}
-    
       - name: Setup Theos
-        if: steps.theos.outputs.cache-hit != 'true'
         uses: actions/checkout@v6.0.1
         with:
           repository: theos/theos
           path: theos
           submodules: recursive
 
-      - name: Download iOS 16.5 SDK
-        if: steps.theos.outputs.cache-hit != 'true' && inputs.sdk_version == '16.5'
+      - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
-          cd sdks
-          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
-          git checkout
-          mv *.sdk $THEOS/sdks
-
-      - name: Download iOS 17.5 SDK
-        if: steps.theos.outputs.cache-hit != 'true' && inputs.sdk_version == '17.5'
-        run: |
-          git clone --quiet --no-tags --single-branch --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-17.5-SDK.git
-          cd iOS-17.5-SDK
-          git sparse-checkout set --no-cone iPhoneOS17.5.sdk
-          git checkout
-          mv *.sdk $THEOS/sdks
-
-      - name: Download iOS 18.6 SDK
-        if: steps.theos.outputs.cache-hit != 'true' && inputs.sdk_version == '18.6'
-        run: |
-          git clone --quiet --no-tags --single-branch --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-18.6-SDK.git
-          cd iOS-18.6-SDK
-          git sparse-checkout set --no-cone iPhoneOS18.6.sdk
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
+          cd iOS-SDKs
+          git sparse-checkout set --no-cone iPhoneOS${{ inputs.sdk_version }}.sdk
           git checkout
           mv *.sdk $THEOS/sdks
 
@@ -96,50 +57,36 @@ jobs:
 
       - name: Clone YouTubeHeader
         run: |
-          if [ -d "$THEOS/include/YouTubeHeader" ]; then
-            echo "YouTubeHeader exists. Pulling latest changes..."
-            cd $THEOS/include/YouTubeHeader
-            git pull
-          else
-            echo "YouTubeHeader does not exist. Cloning repository..."
             cd $THEOS/include
             git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
-          fi
           
       - name: Clone PSHeader
         run: |
-          if [ -d "$THEOS/include/PSHeader" ]; then
-            echo "PSHeader exists. Pulling latest changes..."
-            cd $THEOS/include/PSHeader
-            git pull
-          else
-            echo "PSHeader does not exist. Cloning repository..."
             cd $THEOS/include
             git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git
-          fi
 
-      - name: Build YTweaks (rootless)
+      - name: Build YTIcons
         run: |
-          cd YTweaks
-          echo "Building YTweaks (rootless)..."
-          make clean package DEBUG=0 FINALPACKAGE=1 ROOTLESS=1
-          mv packages/*.deb ${{ github.workspace }}/ytwks_rtls.deb
+          cd YTIcons
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/yticons.deb
 
       - name: Inject Tweaks Into IPA
         run: |
           tweaks=""
+          
           for f in *.deb; do
             if [ -f "$f" ]; then
               tweaks="$tweaks $f"
             fi
           done
           
-          cyan -i youtube.ipa -o WaterTest_YTweaks.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest_YTweaks (${{ github.run_number }}) 
-          files: WaterTest_YTweaks.ipa
+          name: WaterTest (${{ github.run_number }}) 
+          files: WaterTest.ipa
           draft: true
