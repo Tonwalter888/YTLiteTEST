@@ -27,6 +27,7 @@ jobs:
       - name: Clone YTIcons
         run: |
           git clone https://github.com/PoomSmart/YTIcons.git
+          git clone https://github.com/PoomSmart/YouGroupSettings.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -70,6 +71,10 @@ jobs:
           cd YTIcons
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/yticons.deb
+          cd ..
+          cd YouGroupSettings
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ygs.deb
 
       - name: Inject Tweaks Into IPA
         run: |
