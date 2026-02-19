@@ -27,7 +27,7 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
-          git clone --quiet https://github.com/Tonwalter888/YouShare.git
+          git clone --quiet https://github.com/Tonwalter888/YouLoop.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -64,8 +64,8 @@ jobs:
 
       - name: Build
         run: |
-          cd YouShare
-          git switch test
+          cd YouLoop
+          git switch ios-11
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ys.deb
           cd ..
