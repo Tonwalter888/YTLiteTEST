@@ -65,7 +65,6 @@ jobs:
       - name: Build
         run: |
           cd YouLoop
-          git switch ios-11
           make clean package DEBUG=0 FINALPACKAGE=1
           mv packages/*.deb ${{ github.workspace }}/ys.deb
           cd ..
