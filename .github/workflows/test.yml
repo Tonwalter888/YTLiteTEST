@@ -26,8 +26,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/PoomSmart/YTUHD.git
-          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
+          git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -64,8 +63,9 @@ jobs:
 
       - name: Build
         run: |
-          cd YTUHD  
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
+          cd YTUHD
+          git switch dev
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/YTUHD.deb
 
       - name: Inject Tweaks Into IPA
