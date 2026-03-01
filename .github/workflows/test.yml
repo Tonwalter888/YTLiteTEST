@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/YTLitePlus/YTLitePlus.git
+          git clone --quiet https://github.com/Tonwalter888/YTLitePlus.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -64,7 +64,6 @@ jobs:
       - name: Build
         run: |
           cd YTLitePlus
-          git switch ytliteplus-tweak-only
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/YTUHD.deb
 
