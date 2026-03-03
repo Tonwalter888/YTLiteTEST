@@ -27,9 +27,7 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
-          git clone https://github.com/PoomSmart/YouPiP.git
-          git clone https://github.com/PoomSmart/YTVideoOverlay.git
-          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
+          wget "https://github.com/Kylmakalle/ipa/releases/download/youtube/app.ipa" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -69,14 +67,6 @@ jobs:
           git switch fix-playback
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
-          cd ..
-          cd YouPiP
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youpip.deb
-          cd ..
-          cd YTVideoOverlay
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
 
       - name: Inject Tweaks Into IPA
         run: |
