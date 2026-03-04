@@ -28,7 +28,7 @@ jobs:
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           git clone https://github.com/Tonwalter888/YTFlags.git
-          wget "https://github.com/Kylmakalle/ipa/releases/download/youtube/app.ipa" -O youtube.ipa
+          wget "https://armconverter.com/decryptedappstore/download/544007664/com.google.ios.youtube/21.09.2?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjUzNTc5MiIsImlhdCI6MTc3MjYwODg2MCwiZXhwIjoxNzcyNjE5NjYwLCJhcHBpZCI6NTQ0MDA3NjY0LCJhcHB2ZXIiOiIyMS4wOS4yIn0.o98E2pnqwmjcLds4M21FJN1CfFJde_DVITAf12ieQnI" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
