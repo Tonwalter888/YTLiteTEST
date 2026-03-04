@@ -27,6 +27,7 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
+          git clone https://github.com/Tonwalter888/YTFlags.git
           wget "https://github.com/Kylmakalle/ipa/releases/download/youtube/app.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -66,6 +67,10 @@ jobs:
           cd YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          cd ..
+          cd YTFlags
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
 
       - name: Inject Tweaks Into IPA
         run: |
