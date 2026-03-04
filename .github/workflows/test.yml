@@ -64,7 +64,6 @@ jobs:
       - name: Build
         run: |
           cd YTUHD
-          git checkout fcb800ceabdad0785b41b2615585a340960bd22f
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
 
