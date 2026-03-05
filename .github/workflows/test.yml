@@ -27,8 +27,8 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
-          git clone https://github.com/Tonwalter888/YTFlags.git
-          git clone https://github.com/PoomSmart/YTVideoErrorAlert.git
+          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
+          git clone --quiet https://github.com/PoomSmart/YTVideoErrorAlert.git
           wget "https://archive.org/download/com.google.ios.youtube_20.46.3_und3fined/com.google.ios.youtube_20.46.3_und3fined.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -66,7 +66,6 @@ jobs:
       - name: Build
         run: |
           cd YTUHD
-          git switch test
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
           cd ..
