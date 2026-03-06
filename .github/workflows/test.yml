@@ -28,7 +28,7 @@ jobs:
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           git clone --quiet https://github.com/Tonwalter888/YTFlags.git
-          git clone --quiet https://github.com/PoomSmart/YTVideoErrorAlert.git
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           wget "https://archive.org/download/com.google.ios.youtube_20.46.3_und3fined/com.google.ios.youtube_20.46.3_und3fined.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -74,9 +74,9 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytflags.deb
           cd ..
-          cd YTVideoErrorAlert
+          cd YouTube-X
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytva.deb
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
 
       - name: Inject Tweaks Into IPA
         run: |
