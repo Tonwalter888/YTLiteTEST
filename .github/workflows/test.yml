@@ -29,7 +29,7 @@ jobs:
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           git clone --quiet https://github.com/Tonwalter888/YTFlags.git
           git clone --quiet https://github.com/PoomSmart/YouTube-X.git
-          wget "https://archive.org/download/com.google.ios.youtube_20.46.3_und3fined/com.google.ios.youtube_20.46.3_und3fined.ipa" -O youtube.ipa
+          wget "https://files.catbox.moe/5a8qlt.ipa" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
