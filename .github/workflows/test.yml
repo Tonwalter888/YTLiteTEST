@@ -30,7 +30,7 @@ jobs:
       - name: Cyan time
         run: |
           pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-          cyan -i SideStore.ipa -o SSIP.ipa -n "WaterTest" -b com.waterdev.youtube
+          cyan -i SideStore.ipa -o SSIP.ipa -n "SideStore" -b com.sidestore.ip
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
