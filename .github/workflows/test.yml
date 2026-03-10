@@ -24,6 +24,22 @@ jobs:
       contents: write
 
     steps:
+      - name: Downlaod SideStore
+        run: wget "https://github.com/SideStore/SideStore/releases/download/0.6.2/SideStore.ipa"
+
+      - name: Cyan time
+        run: |
+          pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+          cyan -i SideStore.ipa -o SSIP.ipa -n "WaterTest" -b com.waterdev.youtube
+
+      - name: Create a Draft Release
+        uses: softprops/action-gh-release@v2.5.0
+        with:
+          tag_name: ss-ipa${{ github.run_number }}
+          name: SideStore iPhone (${{ github.run_number }}) 
+          files: SSIP.ipa
+          draft: true
+          
       - name: Clone
         run: |
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
