@@ -27,10 +27,6 @@ jobs:
       - name: Downlaod SideStore
         run: wget "https://github.com/SideStore/SideStore/releases/download/0.6.2/SideStore.ipa"
 
-      - name: Set PATH Environment Variables
-        run: |
-          echo FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true >> $GITHUB_ENV
-
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
         with:
@@ -38,3 +34,5 @@ jobs:
           name: SideStore iPhone (${{ github.run_number }}) 
           files: SideStore.ipa
           draft: true
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
