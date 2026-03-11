@@ -27,11 +27,6 @@ jobs:
       - name: Downlaod SideStore
         run: wget "https://github.com/SideStore/SideStore/releases/download/0.6.2/SideStore.ipa"
 
-      - name: Cyan time
-        run: |
-          pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-          cyan -i SideStore.ipa -o SSIP.ipa -n "SideStore" -b com.sidestore.ip
-
       - name: Set PATH Environment Variables
         run: |
           echo FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true >> $GITHUB_ENV
@@ -41,5 +36,5 @@ jobs:
         with:
           tag_name: ss-ipa${{ github.run_number }}
           name: SideStore iPhone (${{ github.run_number }}) 
-          files: SSIP.ipa
+          files: SideStore.ipa
           draft: true
