@@ -24,15 +24,71 @@ jobs:
       contents: write
 
     steps:
-      - name: Downlaod SideStore
-        run: wget "https://github.com/SideStore/SideStore/releases/download/0.6.2/SideStore.ipa"
+      - name: Clone
+        run: |
+          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
+      - name: Install Dependencies
+        run: brew install make ldid
+
+      - name: Set PATH environments variable
+        run: |
+          echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
+          echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
+
+      - name: Setup Theos
+        run: git clone --quiet --recurse-submodules https://github.com/theos/theos.git
+
+      - name: Download iOS SDK
+        run: |
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
+          cd iOS-SDKs
+          git sparse-checkout set --no-cone iPhoneOS${{ inputs.sdk_version }}.sdk
+          git checkout
+          mv *.sdk $THEOS/sdks
+
+      - name: Install cyan
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+
+      - name: Clone YouTubeHeader
+        run: |
+            cd $THEOS/include
+            git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+          
+      - name: Clone PSHeader
+        run: |
+            cd $THEOS/include
+            git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git
+
+      - name: Build
+        run: |
+          cd ..
+          cd YTFlags
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
+          cd ..
+          cd YouTube-X
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+
+      - name: Inject Tweaks Into IPA
+        run: |
+          tweaks=""
+          
+          for f in *.deb; do
+            if [ -f "$f" ]; then
+              tweaks="$tweaks $f"
+            fi
+          done
+          
+          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v2.5.0
         with:
-          tag_name: ss-ipa${{ github.run_number }}
-          name: SideStore iPhone (${{ github.run_number }}) 
-          files: SideStore.ipa
+          tag_name: watertest-ipa${{ github.run_number }}
+          name: WaterTest (${{ github.run_number }}) 
+          files: WaterTest.ipa
           draft: true
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
