@@ -53,18 +53,13 @@ jobs:
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
       - name: Clone YouTubeHeader
-        run: |
-            cd $THEOS/include
-            git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
           
       - name: Clone PSHeader
-        run: |
-            cd $THEOS/include
-            git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
 
       - name: Build
         run: |
-          cd ..
           cd YTFlags
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytflags.deb
