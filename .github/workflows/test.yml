@@ -15,13 +15,15 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+  
 jobs:
   build:
     name: Build
     runs-on: macos-latest
     permissions:
       contents: write
+runs:
+  using: 'node24'
 
     steps:
       - name: Clone
