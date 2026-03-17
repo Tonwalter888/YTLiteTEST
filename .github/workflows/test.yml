@@ -12,6 +12,12 @@ on:
         required: true
         default: 18.6
 
+      url:
+        description: "URL to the decrypted IPA file"
+        default: ""
+        required: true
+        type: string
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -29,9 +35,8 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
-          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
+          git clone --quiet https://github.com/Tonwalter888/FreeYTMPremium.git
+          wget "${{ inputs.url }}" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -58,19 +63,14 @@ jobs:
       - name: Clone YouTubeHeader
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
           
-      - name: Clone PSHeader
-        run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
+      #- name: Clone PSHeader
+      #  run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
 
       - name: Build
         run: |
-          cd YTFlags
-          git switch settingsperf
+          cd FreeYTMPremium
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
-          cd ..
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          mv packages/*.deb ${{ github.workspace }}/freepremium.deb
 
       - name: Inject Tweaks Into IPA
         run: |
