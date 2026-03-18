@@ -32,8 +32,8 @@ jobs:
       contents: write
 
     steps:
-      - name: clone
-        run: git clone https://github.com/Tonwalter888/YTMusicUlitmatePlus.git
+      - name: Clone
+        run: git clone https://github.com/Tonwalter888/YTMusicUltimatePlus.git
 
       - name: Hide sensitive inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
