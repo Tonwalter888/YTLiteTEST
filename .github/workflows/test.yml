@@ -32,11 +32,8 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout Main
-        uses: actions/checkout@v6.0.2
-        with:
-          path: main
-          submodules: recursive
+      - name: clone
+        run: git clone https://github.com/Tonwalter888/YTMusicUlitmatePlus.git
 
       - name: Hide sensitive inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
@@ -77,7 +74,7 @@ jobs:
         with:
           repository: theos/theos
           ref: 344ee5925df036dbd1312b783ad5a00d153c2445
-          path: ${{ github.workspace }}/theos
+          path: theos
           submodules: recursive
 
       - name: Download iOS SDK
@@ -98,7 +95,8 @@ jobs:
 
       - name: Build Tweak for Sideloading
         run: |
-          cd main
+          cd YTMusicUltimatePlus
+          git switch updatetweak
           make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOADING=1
           mv packages/*.deb ../ytmult.deb
 
