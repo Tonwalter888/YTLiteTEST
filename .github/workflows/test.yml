@@ -77,7 +77,7 @@ jobs:
         with:
           repository: theos/theos
           ref: 344ee5925df036dbd1312b783ad5a00d153c2445
-          path: theos
+          path: ${{ github.workspace }}/theos
           submodules: recursive
 
       - name: Download iOS SDK
