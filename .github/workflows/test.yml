@@ -23,6 +23,7 @@ jobs:
     permissions:
       contents: write
     # Force Node.js 24 (Temporary fix for the Github Releases Node.js 20 warnings)
+    # https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -32,7 +33,7 @@ jobs:
         run: |
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           git clone --quiet https://github.com/Tonwalter888/YouSpeed.git
-          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
