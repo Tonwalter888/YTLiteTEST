@@ -30,8 +30,8 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
-          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+          git clone --quiet https://github.com/Tonwalter888/YouSpeed.git
           wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" -O youtube.ipa
 
       - name: Install Dependencies
@@ -64,14 +64,13 @@ jobs:
 
       - name: Build
         run: |
-          cd YTFlags
-          git switch testhud
+          cd YTVideoOverlay
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
           cd ..
-          cd YouTube-X
+          cd YouSpeed
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          mv packages/*.deb ${{ github.workspace }}/yts.deb
 
       - name: Inject Tweaks Into IPA
         run: |
