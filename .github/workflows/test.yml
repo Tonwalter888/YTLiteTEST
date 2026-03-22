@@ -70,6 +70,7 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ytvo.deb
           cd ..
           cd YouSpeed
+          git switch patch-2
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/yts.deb
 
