@@ -29,13 +29,10 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
-          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
-          wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" -O youtube.ipa
-          unzip -q youtube.ipa -d ytextracted
-          cd ytextracted
-          cd Payload
-          cd YouTube.app
-          otool -hv YouTube
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+          git clone --quiet https://github.com/Tonwalter888/YouShare.git
+          wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -69,11 +66,20 @@ jobs:
         run: |
           cd IAmYouTube
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+          cd ..
+          cd YouTube-X
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          cd ..
+          cd YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytvo.deb
           cd ..
-          cd YouChooseQuality
+          cd YouShare
+          git switch pre-main
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/yts.deb
+          mv packages/*.deb ${{ github.workspace }}/ys.deb
 
       - name: Inject Tweaks Into IPA
         run: |
@@ -88,7 +94,7 @@ jobs:
           cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
-        uses: softprops/action-gh-release@v2.5.0
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: watertest-ipa${{ github.run_number }}
           name: WaterTest (${{ github.run_number }}) 
