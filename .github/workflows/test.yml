@@ -58,7 +58,7 @@ jobs:
       - name: Build
         run: |
           cd YTMusicUltimate
-          git switch feat/autoclearcache
+          git switch feat/forceaudioquality
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOADING=1
           mv packages/*.deb ${{ github.workspace }}/imyt.deb
 
