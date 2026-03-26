@@ -18,16 +18,13 @@ jobs:
     # git clone --quiet https://github.com/PoomSmart/YouTube-X.git
     # git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
     # git clone --quiet https://github.com/Tonwalter888/YouMute.git
-    # git clone --quiet https://github.com/Tonwalter888/YTMusicUltimate.git
-    # https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3
     # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
-          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
-          wget "https://decrypt.download/api/downloads/8bcade17-bbed-4fdb-bde9-8d4e6c582e88" --no-verbose --quiet -O youtube.ipa
+          git clone --quiet https://github.com/Tonwalter888/YTMusicUltimate.git
+          wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -56,17 +53,13 @@ jobs:
           
       - name: Clone PSHeader
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
-        
-        # git switch feat/audioquality
+
       - name: Build
         run: |
-          cd IAmYouTube
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          cd YTMusicUltimate
+          git switch feat/audioquality
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOADING=1
           mv packages/*.deb ${{ github.workspace }}/imyt.deb
-          cd ..
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
 
       - name: Inject Tweaks Into IPA
         run: |
