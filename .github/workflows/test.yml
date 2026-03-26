@@ -1,16 +1,6 @@
 name: Build
 on:
   workflow_dispatch:
-    inputs:
-      sdk_version:
-        description: "iOS SDK Version"
-        type: choice
-        options:
-          - 16.5
-          - 17.5
-          - 18.6
-        required: true
-        default: 18.6
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,9 +39,9 @@ jobs:
 
       - name: Download iOS SDK
         run: |
-          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
-          cd iOS-SDKs
-          git sparse-checkout set --no-cone iPhoneOS${{ inputs.sdk_version }}.sdk
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/theos/sdks.git
+          cd sdks
+          git sparse-checkout set --no-cone iPhoneOS16.5.sdk
           git checkout
           mv *.sdk $THEOS/sdks
 
