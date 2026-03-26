@@ -24,15 +24,17 @@ jobs:
       contents: write
     # Force Node.js 24 (Temporary fix for the Github Releases Node.js 20 warnings)
     # https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa
+    # git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+    # git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+    # git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+    # git clone --quiet https://github.com/Tonwalter888/YouMute.git
+    # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
-          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
-          git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
-          git clone --quiet https://github.com/Tonwalter888/YouMute.git
-          wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+          git clone --quiet https://github.com/Tonwalter888/YTMusicUltimate.git
+          wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -64,21 +66,10 @@ jobs:
 
       - name: Build
         run: |
-          cd IAmYouTube
+          cd YTMusicUltimate
+          git switch feat/audioquality
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/imyt.deb
-          cd ..
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
-          cd ..
-          cd YTVideoOverlay
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
-          cd ..
-          cd YouMute
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ym.deb
 
       - name: Inject Tweaks Into IPA
         run: |
