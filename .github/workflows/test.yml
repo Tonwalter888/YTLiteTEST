@@ -34,8 +34,10 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YTMusicUltimate.git
-          wget "https://archive.org/download/com.google.ios.youtubemusic-8.13-Decrypted/com.google.ios.youtubemusic-8.13-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+          git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
+          wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -67,10 +69,18 @@ jobs:
 
       - name: Build
         run: |
-          cd YTMusicUltimate
-          git switch feat/autoclearcache
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOADING=1
-          mv packages/*.deb ${{ github.workspace }}/ytmu.deb
+          cd IAmYouTube
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+          cd ..
+          cd YouTube-X
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          cd ..
+          cd YouChooseQuality
+          git switch patch-1
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
 
       - name: Inject Tweaks Into IPA
         run: |
