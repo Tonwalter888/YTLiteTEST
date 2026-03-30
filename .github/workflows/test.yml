@@ -36,7 +36,8 @@ jobs:
         run: |
           git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet https://github.com/PoomSmart/YouTube-X.git
-          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
+          git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+          git clone --quiet https://github.com/Tonwalter888/YouShare.git
           wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -77,10 +78,14 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
           cd ..
-          cd YouChooseQuality
-          git switch patch-1
+          cd YouShare
+          git switch test
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
+          mv packages/*.deb ${{ github.workspace }}/youshare.deb
+          cd ..
+          cd YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
 
       - name: Inject Tweaks Into IPA
         run: |
