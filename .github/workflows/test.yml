@@ -37,7 +37,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
-          git clone --quiet https://github.com/Tonwalter888/YouLoop.git
+          git clone --quiet https://github.com/Tonwalter888/YouMute.git
           wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -78,10 +78,10 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
           cd ..
-          cd YouLoop
-          git switch test
+          cd YouMute
+          git switch feat/forcemuted
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youshare.deb
+          mv packages/*.deb ${{ github.workspace }}/youmute.deb
           cd ..
           cd YTVideoOverlay
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
