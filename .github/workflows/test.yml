@@ -38,7 +38,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           git clone --quiet https://github.com/Tonwalter888/YouMute.git
-          wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://decrypt.download/api/downloads/8bcade17-bbed-4fdb-bde9-8d4e6c582e88" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
