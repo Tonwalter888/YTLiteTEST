@@ -36,7 +36,8 @@ jobs:
         run: |
           git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
-          git clone https://github.com/Tonwalter888/YouChooseQuality.git
+          git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+          git clone --quiet https://github.com/Tonwalter888/YouSpeed.git
           wget "https://decrypt.download/api/downloads/8bcade17-bbed-4fdb-bde9-8d4e6c582e88" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -62,9 +63,7 @@ jobs:
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
       - name: Clone YouTubeHeader
-        run: | 
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
           
       - name: Clone PSHeader
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
@@ -79,9 +78,13 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
           cd ..
-          cd YouChooseQuality
+          cd YouSpeed
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youchoose.deb
+          mv packages/*.deb ${{ github.workspace }}/ys.deb
+          cd ..
+          cd YTVideoOverlay
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
 
       - name: Inject Tweaks Into IPA
         run: |
