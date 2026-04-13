@@ -36,8 +36,7 @@ jobs:
         run: |
           git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git 
-          git clone --quiet https://github.com/Tonwalter888/YouLoop.git
+          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
           wget "https://decrypt.download/api/downloads/8bcade17-bbed-4fdb-bde9-8d4e6c582e88" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -78,13 +77,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
           cd ..
-          cd YouLoop
-          git switch prtomain
-          make clean package DEBUG=0 FINALPACKAGE=1
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=roothide
-          cd ..
-          cd YTVideoOverlay
+          cd YouChooseQuality
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytvo.deb
 
@@ -101,7 +94,7 @@ jobs:
           cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
           name: WaterTest (${{ github.run_number }}) 
