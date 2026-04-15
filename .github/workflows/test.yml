@@ -40,7 +40,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           git clone --quiet https://github.com/Tonwalter888/YouLoop.git
           git clone --quiet https://github.com/PoomSmart/YouMute.git
-          wget "https://download1581.mediafire.com/zy3nwsrjhcngo6RXZz2gYETmsa3OjSimLBino6MSqOk_WEL12C_Ohy90BecrZcXvRRluKG9eRR3Gh06NVNGChkEFZzOb0bBP6Q7XUBQPsMA4E-EkcbKzX3BmRMuDvZFnhk2QdP6TosPIom3IceMCn-FC8Oa0FRjpstcjCIVkvkvWgK0/pyzs9713heuoxf3/com.google.ios.youtube_21.15.04_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
