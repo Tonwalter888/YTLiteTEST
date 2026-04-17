@@ -89,8 +89,8 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
           wget https://files.catbox.moe/ll0z32.zip -O yl.zip
-          unzip -q yl.zip
-          cd yl
+          unzip -q yl.zip -d what
+          cd what
           mv com.bhackel.youloop_2.0.0_iphoneos-arm64.deb ../youloop.deb
 
       - name: Inject Tweaks Into IPA
