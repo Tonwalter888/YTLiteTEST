@@ -40,6 +40,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           git clone --quiet https://github.com/Tonwalter888/YouLoop.git
           git clone --quiet https://github.com/PoomSmart/YTIcons.git
+          git clone --quiet https://github.com/PoomSmart/YouGroupSettings.git
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -80,7 +81,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
           cd ..
-          cd YTVideoOverlay
+          cd YouGroupSettings
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/uu.deb
           cd ..
@@ -88,7 +89,6 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
-          wget https://files.catbox.moe/uhhp8r.deb
 
       - name: Inject Tweaks Into IPA
         run: |
