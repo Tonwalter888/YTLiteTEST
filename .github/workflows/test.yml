@@ -88,10 +88,10 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
-          cd YouLoop
-          git switch prtomain
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytvo.deb
+          wget https://files.catbox.moe/ll0z32.zip -O yl.zip
+          unzip -q yl.zip
+          cd yl
+          mv com.bhackel.youloop_2.0.0_iphoneos-arm64.deb ../youloop.deb
 
       - name: Inject Tweaks Into IPA
         run: |
