@@ -39,7 +39,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
           git clone --quiet https://github.com/Tonwalter888/YouLoop.git
-          git clone --quiet https://github.com/PoomSmart/YouMute.git
+          git clone --quiet https://github.com/PoomSmart/YTIcons.git
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -84,7 +84,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/uu.deb
           cd ..
-          cd YouMute
+          cd YTIcons
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
