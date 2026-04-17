@@ -91,7 +91,7 @@ jobs:
           wget https://files.catbox.moe/ll0z32.zip -O yl.zip
           unzip -q yl.zip -d what
           cd what
-          mv com.bhackel.youloop_2.0.0_iphoneos-arm64.deb ../youloop.deb
+          mv com.bhackel.youloop_2.0.0_iphoneos-arm64.deb ${{ github.workspace }}
 
       - name: Inject Tweaks Into IPA
         run: |
