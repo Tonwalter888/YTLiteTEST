@@ -88,9 +88,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
-          wget https://files.catbox.moe/ll0z32.zip -O yl.zip
-          unzip -q yl.zip -d what
-          mv what/com.bhackel.youloop_2.0.0_iphoneos-arm64.deb ${{ github.workspace }}
+          wget https://files.catbox.moe/uhhp8r.deb
 
       - name: Inject Tweaks Into IPA
         run: |
