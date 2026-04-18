@@ -86,13 +86,15 @@ jobs:
           cd ..
           cd YTIcons
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/test.deb
+          mv packages/*.deb ${{ github.workspace }}/bruh.deb
           cd ..
           cd YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
-          wget https://files.catbox.moe/l4m8sl.deb -O youchoose.deb
+          wget https://github.com/user-attachments/files/26848120/com.ps.youchoosequality_1.1.0_iphoneos-arm64.deb.zip -O huh.zip
+          unzip huh.zip -q -d sth
+          mv sth/*.deb ../testing.deb
 
       - name: Inject Tweaks Into IPA
         run: |
