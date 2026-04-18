@@ -92,7 +92,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
-          wget https://files.catbox.moe/kes7z0.dylib -O youchoose.dylib
+          wget https://files.catbox.moe/l4m8sl.deb -O youchoose.deb
 
       - name: Inject Tweaks Into IPA
         run: |
