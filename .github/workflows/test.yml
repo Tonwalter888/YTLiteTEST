@@ -89,9 +89,10 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
           cd YTUHD
-          git switch dev
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/test.deb
+          cd ..
+          wget https://files.catbox.moe/l4m8sl.deb
 
       - name: Inject Tweaks Into IPA
         run: |
