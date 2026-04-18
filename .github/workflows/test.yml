@@ -93,7 +93,7 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/test.deb
           cd ..
           wget https://github.com/user-attachments/files/26848120/com.ps.youchoosequality_1.1.0_iphoneos-arm64.deb.zip -O huh.zip
-          unzip huh.zip -q -d sth
+          unzip huh.zip -d sth
           mv sth/*.deb ../testing.deb
 
       - name: Inject Tweaks Into IPA
