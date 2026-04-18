@@ -99,9 +99,7 @@ jobs:
           tweaks=""
           
           for f in *.deb; do
-            if [ -f "$f" ]; then
-              tweaks="$tweaks $f"
-            fi
+            tweaks="$tweaks $f"
           done
           
           cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
