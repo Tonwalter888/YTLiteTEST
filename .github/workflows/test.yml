@@ -41,6 +41,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
+          git clone https://github.com/Tonwalter888/YTFlags
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -97,6 +98,9 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ab.deb
           cd ..
+          cd YTFlags
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytfl.deb
           wget https://github.com/user-attachments/files/26848120/com.ps.youchoosequality_1.1.0_iphoneos-arm64.deb.zip -O huh.zip
           unzip huh.zip -d sth
           cd sth
