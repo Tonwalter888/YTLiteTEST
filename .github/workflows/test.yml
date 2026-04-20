@@ -42,6 +42,7 @@ jobs:
           git clone --quiet https://github.com/Tonwalter888/YTUHD.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           git clone https://github.com/Tonwalter888/YTFlags
+          git clone --recurse https://github.com/Tonwalter888/FLEXing
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -102,6 +103,10 @@ jobs:
           git switch settings
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytfl.deb
+          cd ..
+          cd FLEXing
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/flex.deb
           wget https://github.com/user-attachments/files/26848120/com.ps.youchoosequality_1.1.0_iphoneos-arm64.deb.zip -O huh.zip
           unzip huh.zip -d sth
           cd sth
