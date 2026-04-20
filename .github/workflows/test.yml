@@ -100,12 +100,11 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ab.deb
           cd ..
           cd YTFlags
-          git switch settings
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytfl.deb
           cd ..
           cd FLEXing
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/flex.deb
           wget https://github.com/user-attachments/files/26848120/com.ps.youchoosequality_1.1.0_iphoneos-arm64.deb.zip -O huh.zip
           unzip huh.zip -d sth
