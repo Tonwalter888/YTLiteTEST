@@ -100,6 +100,7 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/ab.deb
           cd ..
           cd YTFlags
+          git switch settings
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytfl.deb
           cd ..
