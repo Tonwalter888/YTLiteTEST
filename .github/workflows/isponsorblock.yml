@@ -37,7 +37,7 @@ jobs:
         run: |
           git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
           git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
-          wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://download1323.mediafire.com/ryk8n3et9b3gjsnzX6Aoyyn2SnDrAPz5zKzkHZjBHpQG94XLfF_PnLz08glmzJVuT_amRbr6aUlZ8y_dPPAE8fB0jdD3J82YVzOGqfj51TneJ5i3LD7UV-yoltg6_c0rjgsbeyliHYVasRcX7UsuFlB8p_RSBi-VqH7RJbzkbWAz8k4/gp6ioc31vncr2le/com.google.ios.youtube_21.16.2_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
