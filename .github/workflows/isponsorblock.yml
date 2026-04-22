@@ -1,0 +1,96 @@
+name: Build
+on:
+  workflow_dispatch:
+    inputs:
+      sdk_version:
+        description: "iOS SDK Version"
+        type: choice
+        options:
+          - 16.5
+          - 17.5
+          - 18.6
+        required: true
+        default: 18.6
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    # Force Node.js 24 (Temporary fix for the Github Releases Node.js 20 warnings)
+    # https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa
+    # git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+    # git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+    # git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+    # git clone --quiet https://github.com/Tonwalter888/YouMute.git
+    # git checkout 1585a3691b2ef0b59d42c40c31639fd8b79e2cd4
+    # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+    # wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
+
+    steps:
+      - name: Clone
+        run: |
+          git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
+          git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
+          wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
+
+      - name: Install Dependencies
+        run: brew install make ldid
+
+      - name: Set PATH environments variable
+        run: |
+          echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
+          echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
+
+      - name: Clone Theos
+        run: git clone --quiet --recurse-submodules https://github.com/roothide/theos.git
+
+      - name: Download iOS SDK
+        run: |
+          git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
+          cd iOS-SDKs
+          git sparse-checkout set --no-cone iPhoneOS${{ inputs.sdk_version }}.sdk
+          git checkout
+          mv *.sdk $THEOS/sdks
+
+      - name: Install cyan
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+
+      - name: Clone YouTubeHeader
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git $THEOS/include/YouTubeHeader
+          
+      - name: Clone PSHeader
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git $THEOS/include/PSHeader
+
+      - name: Build
+        run: |
+          cd Alderis
+          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
+          mv packages/*.deb ${{ github.workspace }}/alderis.deb
+          cd ..
+          cd iSponsorBlock
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb 
+
+      - name: Inject Tweaks Into IPA
+        run: |
+          tweaks=""
+          
+          for f in *.deb; do
+            tweaks="$tweaks $f"
+          done
+          
+          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          
+      - name: Create a Draft Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: watertest-ipa${{ github.run_number }}
+          name: WaterTest (${{ github.run_number }}) 
+          files: WaterTest.ipa
+          draft: true
