@@ -40,7 +40,7 @@ jobs:
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
-        run: brew install make ldid
+        run: brew install make ldid swiftlint
 
       - name: Set PATH environments variable
         run: |
@@ -48,7 +48,7 @@ jobs:
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
 
       - name: Clone Theos
-        run: git clone --quiet --recurse-submodules https://github.com/roothide/theos.git
+        run: git clone --quiet --recurse-submodules https://github.com/theos/theos.git
 
       - name: Download iOS SDK
         run: |
@@ -74,7 +74,7 @@ jobs:
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
           cd ..
           cd iSponsorBlock
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless TARGET=iphone:clang:latest:13.0
           mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb 
 
       - name: Inject Tweaks Into IPA
