@@ -181,9 +181,6 @@ jobs:
       - name: Clone Gonerino
         run: git clone --quiet --depth=1 https://github.com/castdrian/Gonerino.git
 
-      - name: Clone YTweaks
-        run: git clone --quiet --depth=1 https://github.com/fosterbarnes/YTweaks.git
-
       - name: Clone YouGetCaption
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGetCaption.git
 
@@ -324,12 +321,6 @@ jobs:
           cd YouGetCaption
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ygc.deb
-
-      - name: Build YTweaks
-        run: |
-          cd YTweaks
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytweaks.deb
 
       - name: Build YouTube-X
         run: |
