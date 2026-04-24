@@ -32,6 +32,18 @@ on:
         required: false
         type: boolean
 
+      ytclassic:
+        description: "Integrate YTClassicVideoQuality"
+        default: true
+        required: false
+        type: boolean
+
+      ytshare:
+        description: "Integrate youtube-native-share"
+        default: true
+        required: false
+        type: boolean
+
       # volboost:
       #   description: "Integrate VolumeBoostYT (Require iOS 16+)"
       #   default: true
@@ -127,7 +139,7 @@ jobs:
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
 
       - name: Clone YouGroupSettings
-        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
+        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YouGroupSettings.git
            
       - name: Clone YTVideoOverlay
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoOverlay.git
@@ -184,25 +196,30 @@ jobs:
       - name: Clone YouTube-X
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
 
-      - name: Clone iSponsorBlock
-        run: git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
+      #- name: Clone iSponsorBlock
+      #  run: git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
 
       - name: Clone YTVideoErrorAlert
         if: ${{ inputs.ytvid }}
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTVideoErrorAlert.git
 
+      - name: Clone YTClassicVideoQuality
+        if: ${{ inputs.ytclassic }}
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YTClassicVideoQuality.git
+
+      - name: Clone youtube-native-share
+        if: ${{ inputs.ytshare }}
+        run: git clone --quiet --depth=1 https://github.com/jkhsjdhjs/youtube-native-share.git
+
       # - name: Clone VolumeBoostYT
       #   if: ${{ inputs.volboost }}
       #   run: git clone --quiet --depth=1 https://github.com/VasirakCalgux/VolumeBoostYT.git
-
-      - name: Build YouMod
+        
+      - name: Build YouPiP
         run: |
-          cd YouMod
-          echo "YOUMOD_VERSION=$(grep '^Version:' control | cut -d ' ' -f2)" >> $GITHUB_ENV
+          cd YouPiP
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youmod.deb
-
-    # YouPip
+          mv packages/*.deb ${{ github.workspace }}/youpip.deb
 
       - name: Build YTUHD
         run: |
@@ -332,11 +349,11 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/noytpre.deb
 
-      - name: Build iSponsorBlock
-        run: |
-          cd iSponsorBlock
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless TARGET=iphone:clang:latest:13.0
-          mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb
+      #- name: Build iSponsorBlock
+      #  run: |
+      #    cd iSponsorBlock
+      #    make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless TARGET=iphone:clang:latest:13.0
+      #    mv packages/*.deb ${{ github.workspace }}/isponsorblock.deb
 
       - name: Build YTVideoErrorAlert
         if: ${{ inputs.ytvid }}
@@ -344,6 +361,21 @@ jobs:
           cd YTVideoErrorAlert
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytvideoerror.deb
+
+      - name: Build YTClassicVideoQuality
+        if: ${{ inputs.ytclassic }}
+        run: |
+          cd YTClassicVideoQuality
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytclassic.deb
+
+      - name: Build youtube-native-share
+        if: ${{ inputs.ytshare }}
+        run: |
+          cd youtube-native-share
+          git clone --quiet --depth=1 https://github.com/protocolbuffers/protobuf.git
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
+          mv packages/*.deb ${{ github.workspace }}/ytnativeshare.deb
 
       # - name: Build VolumeBoostYT
       #   if: ${{ inputs.volboost }}
