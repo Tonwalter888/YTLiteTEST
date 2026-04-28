@@ -39,6 +39,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
+          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -82,6 +83,11 @@ jobs:
           cd FLEXing
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/test.deb
+          cd ..
+          cd YTFlags
+          git switch settings
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/yyy.deb
 
       - name: Inject Tweaks Into IPA
         run: |
