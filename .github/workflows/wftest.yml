@@ -225,10 +225,8 @@ jobs:
            wget --quiet --no-verbose "https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac" -O /usr/local/bin/tbd
            chmod +x /usr/local/bin/tbd
 
-      - name: Checkout YouMod
-        uses: actions/checkout@v6
-        with:
-          path: YouMod
+      - name: Clone YouMod
+        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YouMod.git
 
       - name: Clone Open in YouTube (Safari Extension)
         run: |
