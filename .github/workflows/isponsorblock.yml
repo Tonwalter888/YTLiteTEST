@@ -35,10 +35,11 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
-          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
           git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTAnotherMiniplayer.git
           wget "https://decrypt.download/api/downloads/edfcaaa5-c47f-44b1-8abf-e957a5d36c0c" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -72,12 +73,16 @@ jobs:
       - name: Build
         run: |
           cd IAmYouTube
-          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/imyt.deb
           cd ..
           cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          cd ..
+          cd YTAnotherMiniplayer
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/mini.deb
           cd ..
           cd Alderis
           make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
