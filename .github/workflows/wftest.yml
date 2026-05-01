@@ -201,9 +201,9 @@ jobs:
           if [ ! -d "$THEOS/include/YouTubeHeader" ]; then
             git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git "$THEOS/include/YouTubeHeader"
           else
-            cd YouTubeHeader
+            cd $THEOS/include/YouTubeHeader
             git pull --force
-            cd ..
+            cd ${{ github.workspace }}
           fi
 
           if [ "${{ inputs.demc }}" = "true" ]; then
@@ -214,9 +214,9 @@ jobs:
           if [ ! -d "$THEOS/include/PSHeader" ]; then
             git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git "$THEOS/include/PSHeader"
           else
-            cd PSHeader
+            cd $THEOS/include/PSHeader
             git pull --force
-            cd ..
+            cd ${{ github.workspace }}
           fi
 
       - name: Install cyan and tbd
