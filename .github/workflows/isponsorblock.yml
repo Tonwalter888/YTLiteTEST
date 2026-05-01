@@ -35,9 +35,11 @@ jobs:
     steps:
       - name: Clone
         run: |
+          git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
           git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
-          wget "https://download1323.mediafire.com/ryk8n3et9b3gjsnzX6Aoyyn2SnDrAPz5zKzkHZjBHpQG94XLfF_PnLz08glmzJVuT_amRbr6aUlZ8y_dPPAE8fB0jdD3J82YVzOGqfj51TneJ5i3LD7UV-yoltg6_c0rjgsbeyliHYVasRcX7UsuFlB8p_RSBi-VqH7RJbzkbWAz8k4/gp6ioc31vncr2le/com.google.ios.youtube_21.16.2_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
@@ -69,6 +71,14 @@ jobs:
 
       - name: Build
         run: |
+          cd IAmYouTube
+          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
+          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+          cd ..
+          cd YouTube-X
+          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          cd ..
           cd Alderis
           make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/alderis.deb
@@ -85,12 +95,12 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_iSP.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest (${{ github.run_number }}) 
-          files: WaterTest.ipa
+          name: WaterTest_iSP (${{ github.run_number }}) 
+          files: WaterTest_iSP.ipa
           draft: true
