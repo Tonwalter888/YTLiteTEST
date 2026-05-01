@@ -170,14 +170,14 @@ jobs:
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV
 
       # Original from YTweaks
-      - name: Get Theos commit
-        id: get_theos_commit
+      - name: Get tweaks commit
         run: |
           get_commit_hash() {
             local repo_url=$1
             git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
           }
           echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
+          echo "OPENYT_COMMIT=$(get_commit_hash "https://github.com/BillyCurtis/OpenYouTubeSafariExtension")" >> $GITHUB_ENV
 
       - name: Cache Theos
         id: cache-theos
@@ -202,20 +202,20 @@ jobs:
             git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git "$THEOS/include/YouTubeHeader"
           else
             cd $THEOS/include/YouTubeHeader
-            git pull --force
+            git pull --quiet --force
             cd ${{ github.workspace }}
           fi
-
+          
           if [ "${{ inputs.demc }}" = "true" ]; then
             rm -fr "$THEOS/include/YTHeaders"
             cp -r "$THEOS/include/YouTubeHeader" "$THEOS/include/YTHeaders"
           fi
-
+          
           if [ ! -d "$THEOS/include/PSHeader" ]; then
             git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git "$THEOS/include/PSHeader"
           else
             cd $THEOS/include/PSHeader
-            git pull --force
+            git pull --quiet --force
             cd ${{ github.workspace }}
           fi
 
@@ -225,10 +225,20 @@ jobs:
            wget --quiet --no-verbose "https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac" -O /usr/local/bin/tbd
            chmod +x /usr/local/bin/tbd
 
-      - name: Clone YouMod
-        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YouMod.git
+      - name: Checkout YouMod
+        uses: actions/checkout@v6
+        with:
+          path: YouMod
+
+      - name: Cache Open in YouTube
+        id: cache-openyt
+        uses: actions/cache@v5
+        with:
+          path: OpenYouTubeSafariExtension
+          key: OpeninYT-${{ env.OPENYT_COMMIT }}
 
       - name: Clone Open in YouTube (Safari Extension)
+        if: ${{ steps.cache-openyt.outputs.cache-hit != 'true' }}
         run: |
           git clone --quiet -n --depth=1 --filter=tree:0 https://github.com/BillyCurtis/OpenYouTubeSafariExtension.git
           cd OpenYouTubeSafariExtension
