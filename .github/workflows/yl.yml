@@ -70,7 +70,7 @@ jobs:
       - name: Build
         run: |
           cd YouMod
-          git switch test
+          git switch pre
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
