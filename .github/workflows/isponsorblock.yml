@@ -39,7 +39,7 @@ jobs:
           git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 https://github.com/Galactic-Dev/iSponsorBlock.git
           git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
-          wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
+          wget "https://decrypt.download/api/downloads/edfcaaa5-c47f-44b1-8abf-e957a5d36c0c" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid swiftlint
