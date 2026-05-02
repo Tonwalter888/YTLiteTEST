@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/grohit1810/YouMod.git
+          git clone --quiet https://github.com/Tonwalter888/YouMod.git
           wget "https://decrypt.download/api/downloads/edfcaaa5-c47f-44b1-8abf-e957a5d36c0c" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -97,7 +97,7 @@ jobs:
       - name: Build
         run: |
           cd YouMod
-          git switch feature/add-sponsorblock
+          git switch shorts
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
