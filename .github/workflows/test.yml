@@ -107,7 +107,7 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_FLEX.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
