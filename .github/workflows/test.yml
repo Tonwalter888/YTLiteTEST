@@ -41,6 +41,7 @@ jobs:
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
           git clone --quiet https://github.com/Tonwalter888/YTFlags.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -93,6 +94,10 @@ jobs:
           git switch settings
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/yyy.deb
+          cd ..
+          cd YTABConfig
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ab.deb
 
       - name: Inject Tweaks Into IPA
         run: |
@@ -102,12 +107,12 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest (${{ github.run_number }}) 
-          files: WaterTest.ipa
+          name: WaterTest_FLEX (${{ github.run_number }}) 
+          files: WaterTest_FLEX.ipa
           draft: true
