@@ -37,7 +37,7 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/Tonwalter888/YouMod.git
-          wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
