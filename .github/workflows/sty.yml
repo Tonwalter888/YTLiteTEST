@@ -1,0 +1,120 @@
+name: Build with YouMod test (Sponsorblock)
+on:
+  workflow_dispatch:
+    inputs:
+      sdk_version:
+        description: "iOS SDK Version"
+        type: choice
+        options:
+          - 16.5
+          - 17.5
+          - 18.6
+        required: true
+        default: 18.6
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    # Force Node.js 24 (Temporary fix for the Github Releases Node.js 20 warnings)
+    # https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa
+    # git clone --quiet https://github.com/PoomSmart/IAmYouTube.git
+    # git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+    # git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
+    # git clone --quiet https://github.com/Tonwalter888/YouMute.git
+    # git checkout 1585a3691b2ef0b59d42c40c31639fd8b79e2cd4
+    # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+    # wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
+    # wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
+
+    steps:
+      - name: Clone
+        run: |
+          git clone --quiet https://github.com/grohit1810/YouMod.git
+          wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+
+      - name: Install Dependencies
+        run: brew install make ldid
+
+      - name: Set PATH environments variable
+        run: |
+          echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
+          echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
+
+      - name: Install cyan
+        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
+
+      # Original from YTweaks
+      - name: Get Theos commit
+        run: |
+          get_commit_hash() {
+            local repo_url=$1
+            git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
+          }
+          echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
+      
+      - name: Cache Theos
+        id: cache-theos
+        uses: actions/cache@v5
+        with:
+          path: theos
+          key: 18.6-SDK-${{ env.THEOS_COMMIT }}
+
+      - name: Setup Theos
+        if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
+        run: |
+            git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
+            git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
+            cd iOS-SDKs
+            git sparse-checkout set --no-cone iPhoneOS18.6.sdk
+            git checkout --quiet
+            mv *.sdk "$THEOS/sdks"
+            
+      - name: Clone headers
+        run: |
+          if [ ! -d "$THEOS/include/YouTubeHeader" ]; then
+            git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git "$THEOS/include/YouTubeHeader"
+          else
+            cd $THEOS/include/YouTubeHeader
+            git pull --quiet --force
+            cd ${{ github.workspace }}
+          fi
+          
+          if [ ! -d "$THEOS/include/PSHeader" ]; then
+            git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git "$THEOS/include/PSHeader"
+          else
+            cd $THEOS/include/PSHeader
+            git pull --quiet --force
+            cd ${{ github.workspace }}
+          fi
+
+      - name: Build
+        run: |
+          cd YouMod
+          git switch feature/add-sponsorblock
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youmod.deb
+
+      - name: Inject Tweaks Into IPA
+        run: |
+          tweaks=""
+          
+          for f in *.deb; do
+            tweaks="$tweaks $f"
+          done
+          
+          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          
+      - name: Create a Draft Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: watertest-ipa${{ github.run_number }}
+          name: WaterTest_YouMod (${{ github.run_number }}) 
+          files: WaterTest_YouMod.ipa
+          draft: true
