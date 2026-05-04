@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YouMod.git
+          git clone --quiet https://github.com/daisuke1227/YouMod.git
           wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
