@@ -1,4 +1,4 @@
-name: Build IPA with FLEX
+name: Build IPA with FLEX and YouMod test
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build IPA with FLEX
+    name: Build IPA with FLEX and YouMod test
     runs-on: macos-latest
     permissions:
       contents: write
@@ -42,6 +42,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
+          git clone --quiet https://github.com/grohit1810/YouMod.git
           wget "https://files.catbox.moe/xr2jo7.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -101,6 +102,11 @@ jobs:
 
       - name: Build
         run: |
+          cd YouMod
+          git switch feature/add-sponsorblock
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ymwwwww.deb
+          cd ..
           cd IAmYouTube
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/imyt.deb
