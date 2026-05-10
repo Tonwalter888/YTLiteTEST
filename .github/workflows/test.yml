@@ -1,4 +1,4 @@
-name: Build
+name: Build IPA with FLEX
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build
+    name: Build IPA with FLEX
     runs-on: macos-latest
     permissions:
       contents: write
@@ -39,7 +39,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
-          git clone --quiet https://github.com/Tonwalter888/YTFlags.git
+          git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
@@ -53,7 +53,7 @@ jobs:
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
 
       - name: Clone Theos
-        run: git clone --quiet --recurse-submodules https://github.com/roothide/theos.git
+        run: git clone --quiet --recurse-submodules https://github.com/theos/theos.git
 
       - name: Download iOS SDK
         run: |
@@ -90,8 +90,7 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/icons.deb
           cd ..
-          cd YTFlags
-          git switch settings
+          cd FLEXHelperForYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/yyy.deb
           cd ..
