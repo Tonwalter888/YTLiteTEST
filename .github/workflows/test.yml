@@ -32,7 +32,7 @@ jobs:
     # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
     # wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
     # wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
-
+  # https://files.catbox.moe/lyn4gg.ipa 21.19
     steps:
       - name: Clone
         run: |
@@ -43,7 +43,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           git clone --quiet https://github.com/grohit1810/YouMod.git
-          wget "https://files.catbox.moe/xr2jo7.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://files.catbox.moe/lyn4gg.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
