@@ -1,4 +1,4 @@
-name: Build with YouMod test
+name: Build with YTX test
 on:
   workflow_dispatch:
     inputs:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/daisuke1227/YouMod.git
+          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
           wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -96,7 +96,7 @@ jobs:
 
       - name: Build
         run: |
-          cd YouMod
+          cd YouTube-X
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
