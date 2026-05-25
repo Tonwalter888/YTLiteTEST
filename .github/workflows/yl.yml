@@ -1,4 +1,4 @@
-name: Build with YTX test
+name: Build with YCQ test
 on:
   workflow_dispatch:
     inputs:
@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/PoomSmart/YouTube-X.git
+          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
           wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -96,7 +96,7 @@ jobs:
 
       - name: Build
         run: |
-          cd YouTube-X
+          cd YouChooseQuality
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
@@ -108,12 +108,12 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_YCQ.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest_YouMod (${{ github.run_number }}) 
-          files: WaterTest_YouMod.ipa
+          name: WaterTest_YCQ (${{ github.run_number }}) 
+          files: WaterTest_YCQ.ipa
           draft: true
