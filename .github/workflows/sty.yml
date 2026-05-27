@@ -1,4 +1,4 @@
-name: Build with YouMod test (Sponsorblock)
+name: Build with YouMod test
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build
+    name: Build with YouMod test
     runs-on: macos-latest
     permissions:
       contents: write
@@ -110,7 +110,7 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube.youmod
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3

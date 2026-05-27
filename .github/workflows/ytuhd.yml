@@ -1,4 +1,4 @@
-name: Build with YCQ test
+name: Build with YTUHD test
 on:
   workflow_dispatch:
     inputs:
@@ -18,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build
+    name: Build with YTUHD test
     runs-on: macos-latest
     permissions:
       contents: write
@@ -36,7 +36,9 @@ jobs:
     steps:
       - name: Clone
         run: |
-          git clone --quiet https://github.com/Tonwalter888/YouChooseQuality.git
+          git clone --quiet --depth=1 https://github.com/SweptWasTaken/YTUHD.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
+          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           wget "https://archive.org/download/com.google.ios.youtube-21.17.3-Decrypted/com.google.ios.youtube-21.17.3-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -94,11 +96,19 @@ jobs:
             cd ${{ github.workspace }}
           fi
 
-      - name: Build
+      - name: Build things
         run: |
-          cd YouChooseQuality
+          cd YTUHD
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youmod.deb
+          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+          cd ..
+          cd IAmYouTube
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/imyt.deb
+          cd ..
+          cd YouTube-X
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ytx.deb
 
       - name: Inject Tweaks Into IPA
         run: |
@@ -108,12 +118,12 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_YCQ.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_YTUHD.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube.ytuhd
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest_YCQ (${{ github.run_number }}) 
-          files: WaterTest_YCQ.ipa
+          name: WaterTest_YTUHD (${{ github.run_number }}) 
+          files: WaterTest_YTUHD.ipa
           draft: true

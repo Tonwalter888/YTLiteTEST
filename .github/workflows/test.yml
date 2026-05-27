@@ -32,12 +32,11 @@ jobs:
     # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
     # wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
     # wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
-  # https://files.catbox.moe/lyn4gg.ipa 21.19
+    # https://files.catbox.moe/lyn4gg.ipa 21.19
+
     steps:
       - name: Clone
         run: |
-          git clone --quiet --depth=1 https://github.com/PoomSmart/IAmYouTube.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YouTube-X.git
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
@@ -100,32 +99,24 @@ jobs:
       - name: Install cyan
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
-      - name: Build
+      - name: Build things
         run: |
           cd YouMod
           git switch feature/add-sponsorblock
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ymwwwww.deb
-          cd ..
-          cd IAmYouTube
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/imyt.deb
-          cd ..
-          cd YouTube-X
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ytx.deb
+          mv packages/*.deb ${{ github.workspace }}/youmod.deb
           cd ..
           cd FLEXing
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
-          mv packages/*.deb ${{ github.workspace }}/test.deb
+          mv packages/*.deb ${{ github.workspace }}/flex.deb
           cd ..
           cd YTIcons
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/icons.deb
+          mv packages/*.deb ${{ github.workspace }}/yticons.deb
           cd ..
           cd FLEXHelperForYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/yyy.deb
+          mv packages/*.deb ${{ github.workspace }}/flexhelper.deb
           cd ..
           cd YTABConfig
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
@@ -139,7 +130,7 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_FLEX.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube
+          cyan -i youtube.ipa -o WaterTest_FLEX.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube.flex
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
