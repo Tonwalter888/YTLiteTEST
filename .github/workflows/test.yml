@@ -29,7 +29,7 @@ jobs:
     # git clone --quiet https://github.com/PoomSmart/YTVideoOverlay.git
     # git clone --quiet https://github.com/Tonwalter888/YouMute.git
     # git checkout 1585a3691b2ef0b59d42c40c31639fd8b79e2cd4
-    # wget "https://archive.org/download/com.google.ios.youtube-21.07.4-Decrypted/com.google.ios.youtube-21.07.4-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+    # wget "https://archive.org/download/com.google.ios.youtube-21.21.03-Decrypted/com.google.ios.youtube-21.21.03-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
     # wget "https://decrypt.download/api/downloads/fe5e4b75-2754-4265-936f-f150a7bdbcc3" --no-verbose --quiet -O youtube.ipa
     # wget "https://files.catbox.moe/d7q8rb.ipa" --no-verbose --quiet -O youtube.ipa
     # https://files.catbox.moe/lyn4gg.ipa 21.19
@@ -42,7 +42,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           git clone --quiet https://github.com/grohit1810/YouMod.git
-          wget "https://archive.org/download/com.google.ios.youtube-21.21.03-Decrypted/com.google.ios.youtube-21.21.03-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
