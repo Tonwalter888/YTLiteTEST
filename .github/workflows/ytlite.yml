@@ -39,8 +39,6 @@ jobs:
         run: |
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
-          git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
           wget "https://files.catbox.moe/g33idg.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
@@ -104,17 +102,9 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/flex.deb
           cd ..
-          cd YTIcons
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/yticons.deb
-          cd ..
           cd FLEXHelperForYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/flexhelper.deb
-          cd ..
-          cd YTABConfig
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ab.deb
 
       - name: Inject Tweaks Into IPA
         run: |
