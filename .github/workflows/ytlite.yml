@@ -41,7 +41,7 @@ jobs:
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
-          wget "https://files.catbox.moe/uw3wxz.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://files.catbox.moe/g33idg.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
