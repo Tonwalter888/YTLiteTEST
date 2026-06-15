@@ -39,7 +39,7 @@ jobs:
         run: |
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
-          wget "https://files.catbox.moe/g33idg.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://download1655.mediafire.com/6oa7tgzqc7ugHCDS5tcRjS2oNZzFT9ccSVGF6t6Yt_bbiCdhMdA7WG0e4SSuibf2MMclBAZpmLQf4pKqY5Bw37f9XIFXJ34qwFkOR6614-qGWuqbxhVIypnQEG4Fyut_IHJ96CzUbZFkfImRCBswGJxpf3GqCR1FUBmYApzzCLDMsMmA/2y36zbbvesfwv8k/YTKplus_5.5.6crackedfix.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
