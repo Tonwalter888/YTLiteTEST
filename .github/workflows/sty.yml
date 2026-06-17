@@ -38,7 +38,7 @@ jobs:
       - name: Clone
         run: |
           git clone --quiet https://github.com/grohit1810/YouMod.git
-          wget "https://archive.org/download/com.google.ios.youtube-21.21.03-Decrypted/com.google.ios.youtube-21.21.03-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
+          wget "https://archive.org/download/com.google.ios.youtube_21.22.04_und3fined/com.google.ios.youtube_21.22.04_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -110,7 +110,7 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "WaterTest" -b com.waterdev.youtube.youmod
+          cyan -i youtube.ipa -o WaterTest_YouMod.ipa -uwef $tweaks -n "YouTube" -b com.google.ios.youtube
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
