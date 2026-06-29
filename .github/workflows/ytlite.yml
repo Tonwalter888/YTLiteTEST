@@ -39,8 +39,7 @@ jobs:
         run: |
           git clone --quiet --depth=1 --recurse https://github.com/PoomSmart/FLEXing.git
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
-          wget "https://download1655.mediafire.com/6oa7tgzqc7ugHCDS5tcRjS2oNZzFT9ccSVGF6t6Yt_bbiCdhMdA7WG0e4SSuibf2MMclBAZpmLQf4pKqY5Bw37f9XIFXJ34qwFkOR6614-qGWuqbxhVIypnQEG4Fyut_IHJ96CzUbZFkfImRCBswGJxpf3GqCR1FUBmYApzzCLDMsMmA/2y36zbbvesfwv8k/YTKplus_5.5.6crackedfix.ipa" --no-verbose --quiet -O youtube.ipa
-
+      
       - name: Install Dependencies
         run: brew install make ldid
 
@@ -93,9 +92,6 @@ jobs:
             cd ${{ github.workspace }}
           fi
 
-      - name: Install cyan
-        run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
-
       - name: Build things
         run: |
           cd FLEXing
@@ -105,16 +101,6 @@ jobs:
           cd FLEXHelperForYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/flexhelper.deb
-
-      - name: Inject Tweaks Into IPA
-        run: |
-          tweaks=""
-          
-          for f in *.deb; do
-            tweaks="$tweaks $f"
-          done
-          
-          cyan -i youtube.ipa -o WaterTest_FLEX_YTLite.ipa -uwef $tweaks -n "WaterTest_FLEX_YTLite" -b com.waterdev.youtube.flex.ytlite
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
