@@ -121,5 +121,7 @@ jobs:
         with:
           tag_name: watertest-ipa${{ github.run_number }}
           name: WaterTest_FLEX_YTLite (${{ github.run_number }}) 
-          files: WaterTest_FLEX_YTLite.ipa
+          files: |
+             flex.deb
+             flexhelper.deb
           draft: true
