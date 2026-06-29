@@ -14,61 +14,14 @@ jobs:
       contents: write
 
     steps:
-      - name: Install Dependencies
-        run: brew install make ldid swiftlint
-
-      - name: Set PATH Environment Variables
-        run: |
-          echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
-          echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV
-
-      # Original from YTweaks
-      - name: Get tweaks commit
-        run: |
-          get_commit_hash() {
-            local repo_url=$1
-            git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
-          }
-          echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
-
-      - name: Cache Theos
-        id: cache-theos
-        uses: actions/cache@v5
-        with:
-          path: theos
-          key: 18.6-SDK-${{ env.THEOS_COMMIT }}
-
-      - name: Setup Theos
-        if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
-        run: |
-            git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
-            git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
-            cd iOS-SDKs
-            git sparse-checkout set --no-cone iPhoneOS18.6.sdk
-            git checkout --quiet
-            mv *.sdk "$THEOS/sdks"
-
-      - name: Fix Theos od broken pipe issue
-        run: sed -i '' 's/od -c "$i" | head/od -c "$i" 2>\/dev\/null | head/g' $THEOS/bin/convert_xml_plist.sh || true
-
       - name: Install tbd
         run: |
-           wget --quiet --no-verbose "https://github.com/inoahdev/tbd/releases/download/2.2/tbd-mac" -O /usr/local/bin/tbd
-           chmod +x /usr/local/bin/tbd
-
-      - name: Clone Alderis
-        run: git clone --quiet --depth=1 https://github.com/hbang/Alderis.git
-        
-      - name: Build Alderis
-        run: |
-          cd Alderis
-          make clean package DEBUG=0 FINALPACKAGE=1 ARCHS=arm64
-          mv packages/*.deb ${{ github.workspace }}/alderis.deb
+           wget --quiet --no-verbose "https://archive.org/download/luma-fusion-5.4.3-26.0-le-ti/Minecraft_1.26.32_13.0_LeTi.ipa" -O minecraft.ipa
 
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: deb${{ github.run_number }}
-          name: Alderis (${{ github.run_number }}) 
-          files: alderis.deb
+          name: MC (${{ github.run_number }}) 
+          files: minecraft.ipa
           draft: true
