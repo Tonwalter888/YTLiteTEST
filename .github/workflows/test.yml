@@ -52,31 +52,18 @@ jobs:
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
 
-      # Original from YTweaks
-      - name: Get Theos commit
-        run: |
-          get_commit_hash() {
-            local repo_url=$1
-            git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
-          }
-          echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
-      
-      - name: Cache Theos
-        id: cache-theos
-        uses: actions/cache@v5
-        with:
-          path: theos
-          key: 18.6-SDK-${{ env.THEOS_COMMIT }}
+
 
       - name: Setup Theos
-        if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
         run: |
-            git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
+            git clone --quiet --recurse-submodules https://github.com/theos/theos.git
             git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
             cd iOS-SDKs
             git sparse-checkout set --no-cone iPhoneOS18.6.sdk
             git checkout --quiet
             mv *.sdk "$THEOS/sdks"
+            cd theos
+            git checkout 9bc73406cf80b711ef4d02c15ff1dedc4478a275
             
       - name: Clone headers
         run: |
