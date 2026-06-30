@@ -52,8 +52,6 @@ jobs:
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
 
-
-
       - name: Setup Theos
         run: |
             git clone --quiet --recurse-submodules https://github.com/theos/theos.git
@@ -62,6 +60,7 @@ jobs:
             git sparse-checkout set --no-cone iPhoneOS18.6.sdk
             git checkout --quiet
             mv *.sdk "$THEOS/sdks"
+            cd
             cd theos
             git checkout 9bc73406cf80b711ef4d02c15ff1dedc4478a275
             
