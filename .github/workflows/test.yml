@@ -53,9 +53,10 @@ jobs:
         if: ${{ inputs.ios15 }}
         run: wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
-      - name: 2
-        if: ${{ !inputs.ios15 }}
-        run: wget "https://archive.org/download/com.google.ios.youtube_21.22.04_und3fined/com.google.ios.youtube_21.22.04_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
+      - name: Install MEGA downloader
+        run: |
+          brew install megatools
+          megadl --no-progress --path youtube.ipa "https://mega.nz/file/LPowwDoa#EegnY2z7b9Vw4m-YQr-PJfsC8r82CWo2pIBVQqnV2ZE"
 
       - name: Install Dependencies
         run: brew install make ldid
