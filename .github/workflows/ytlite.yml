@@ -54,7 +54,7 @@ jobs:
 
       - name: 2
         if: ${{ !inputs.ios15 }}
-        run: wget "https://filebin.net/e4eynafygxbp4hhs/YTLitePlusEXTRA_21.25.5_v5.2.1_cracked.ipa" --no-verbose --quiet -O youtube.ipa
+        run: wget "https://filebin.net/e4eynafygxbp4hhs/YTLite_5.2.1_Cracked.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
