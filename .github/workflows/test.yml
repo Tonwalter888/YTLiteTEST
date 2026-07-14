@@ -56,7 +56,7 @@ jobs:
       - name: Install MEGA downloader
         run: |
           brew install megatools
-          megadl --no-progress --path youtube.ipa "https://mega.nz/file/LPowwDoa#EegnY2z7b9Vw4m-YQr-PJfsC8r82CWo2pIBVQqnV2ZE"
+          megadl --no-progress --path youtube.ipa "https://mega.nz/file/yWgHiaLR#fCesZEj5FwybWrVa1IX--Jw-963iyuaeTjWynMUk7KI"
 
       - name: Install Dependencies
         run: brew install make ldid
