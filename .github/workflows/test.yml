@@ -54,6 +54,7 @@ jobs:
         run: wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install MEGA downloader
+        if: ${{ !inputs.ios15 }}
         run: |
           brew install megatools
           megadl --no-progress --path youtube.ipa "https://mega.nz/file/yWgHiaLR#fCesZEj5FwybWrVa1IX--Jw-963iyuaeTjWynMUk7KI"
