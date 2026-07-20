@@ -43,7 +43,7 @@ jobs:
     steps:
       - name: Clone
         run: |
-          wget https://files.catbox.moe/9ctjo9.zip -O water.zip
+          wget https://github.com/Tonwalter888/YTLiteTEST/raw/refs/heads/main/YTDownloadManager_Fix.zip -O water.zip
           unzip -q water.zip -d YouMod
 
       - name: 1
