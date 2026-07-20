@@ -30,36 +30,35 @@ def parse_ytdlp_json(stdout):
     raise ValueError("yt-dlp returned no data")
 
 
-
 def convert_to_hevc_if_needed(file_path):
     try:
-        probe=subprocess.run([
-            "ffprobe","-v","error","-select_streams","v:0",
-            "-show_entries","stream=height",
-            "-of","default=noprint_wrappers=1:nokey=1",
+        probe = subprocess.run([
+            "ffprobe", "-v", "error", "-select_streams", "v:0",
+            "-show_entries", "stream=height",
+            "-of", "default=noprint_wrappers=1:nokey=1",
             file_path
-        ],capture_output=True,text=True)
-        if probe.returncode!=0:
+        ], capture_output=True, text=True)
+        if probe.returncode != 0:
             return file_path
         try:
-            h=int(probe.stdout.strip())
+            h = int(probe.stdout.strip())
         except:
             return file_path
-        if h<1440:
+        if h < 1440:
             return file_path
-        out=file_path+".hevc.mp4"
-        ff=subprocess.run([
-            "ffmpeg","-y","-i",file_path,
-            "-c:v","hevc_videotoolbox",
-            "-tag:v","hvc1",
-            "-c:a","aac","-b:a","192k",
+        out = file_path + ".hevc.mp4"
+        ff = subprocess.run([
+            "ffmpeg", "-y", "-i", file_path,
+            "-c:v", "hevc_videotoolbox",
+            "-tag:v", "hvc1",
+            "-c:a", "aac", "-b:a", "192k",
             out
-        ],capture_output=True,text=True)
-        if ff.returncode!=0:
+        ], capture_output=True, text=True)
+        if ff.returncode != 0:
             print(ff.stderr)
             return file_path
         os.remove(file_path)
-        os.rename(out,file_path)
+        os.rename(out, file_path)
         return file_path
     except Exception as e:
         print(e)
@@ -83,8 +82,10 @@ def run_download(job_id, url, format_choice, format_id):
 
     try:
         print(f"[{job_id}] Starting yt-dlp download...")
-result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-print(f"[{job_id}] yt-dlp finished with code {result.returncode}")
+        # แก้ไขจุดที่ 1: จัดย่อหน้าคำสั่งรันกระบวนการย่อยให้ถูกต้อง
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        print(f"[{job_id}] yt-dlp finished with code {result.returncode}")
+        
         if result.returncode != 0:
             job["status"] = "error"
             job["error"] = result.stderr.strip().split("\n")[-1]
@@ -96,10 +97,11 @@ print(f"[{job_id}] yt-dlp finished with code {result.returncode}")
             job["error"] = "Download completed but no file was found"
             return
 
+        # แก้ไขจุดที่ 2: จัดระเบียบเงื่อนไขตรวจสอบไฟล์ และเติมลอจิกคัดแยก .mp3 กรณีเลือก audio
         if format_choice == "audio":
-            
-else:
-            
+            target = [f for f in files if f.endswith(".mp3")]
+            chosen = target[0] if target else files[0]
+        else:
             target = [f for f in files if f.endswith(".mp4")]
             chosen = target[0] if target else files[0]
 
@@ -110,18 +112,22 @@ else:
                 except OSError:
                     pass
 
-        chosen = convert_to_hevc_if_needed(chosen)
+        # รันการแปลงโค้ดวิดีโอ (เฉพาะกรณีไม่ใช่ไฟล์เสียง)
+        if format_choice != "audio":
+            chosen = convert_to_hevc_if_needed(chosen)
 
         job["status"] = "done"
         job["file"] = chosen
         ext = os.path.splitext(chosen)[1]
         title = job.get("title", "").strip()
+        
         # Sanitize title for filename
         if title:
             safe_title = "".join(c for c in title if c not in r'\/:*?"<>|').strip()[:100].strip()
             job["filename"] = f"{safe_title}{ext}" if safe_title else os.path.basename(chosen)
         else:
             job["filename"] = os.path.basename(chosen)
+            
     except subprocess.TimeoutExpired:
         job["status"] = "error"
         job["error"] = "Download timed out (5 min limit)"
@@ -245,8 +251,6 @@ def download_file(job_id):
     return send_file(job["file"], as_attachment=True, download_name=job["filename"])
 
 
-
-
 @app.route('/api/stream', methods=['POST'])
 def get_stream_url():
     data = request.json
@@ -273,8 +277,6 @@ def get_stream_url():
                 
     except Exception as e:
         return jsonify({"error": f"Eroare yt-dlp: {str(e)}"}), 500
-
-
 
 
 if __name__ == "__main__":
