@@ -119,6 +119,7 @@ jobs:
       - name: Build things
         run: |
           cd YouMod
+          cd YTDownloadManager
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
