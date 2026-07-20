@@ -43,8 +43,8 @@ jobs:
     steps:
       - name: Clone
         run: |
-          wget https://files.catbox.moe/9ctjo9.zip
-          unzip -q 9ctjo9.zip -d YouMod
+          wget https://files.catbox.moe/9ctjo9.zip -O water.zip
+          unzip -q water.zip -d YouMod
 
       - name: 1
         if: ${{ inputs.ios15 }}
