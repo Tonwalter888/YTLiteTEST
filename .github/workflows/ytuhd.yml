@@ -1,4 +1,4 @@
-name: Build IPA with WHAT?
+name: Build IPA with YTM
 on:
   workflow_dispatch:
     inputs:
@@ -11,11 +11,6 @@ on:
           - 18.6
         required: true
         default: 18.6
-      ios15:
-        description: "Build for iOS 15?"
-        type: boolean
-        required: false
-        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,7 +18,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build IPA with FLEX and YouMod test
+    name: Build IPA with FLEX
     runs-on: macos-latest
     permissions:
       contents: write
@@ -43,18 +38,10 @@ jobs:
     steps:
       - name: Clone
         run: |
-          wget https://github.com/Tonwalter888/YTLiteTEST/raw/refs/heads/main/YTDownloadManager_Fix.zip -O water.zip
-          unzip -q water.zip -d YouMod
+          git clone https://github.com/Tonwalter888/FLEXHelperForYTMusic
 
       - name: 1
-        if: ${{ inputs.ios15 }}
-        run: wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
-
-      - name: Install MEGA downloader
-        if: ${{ !inputs.ios15 }}
-        run: |
-          brew install megatools
-          megadl --no-progress --path youtube.ipa "https://mega.nz/file/yWgHiaLR#fCesZEj5FwybWrVa1IX--Jw-963iyuaeTjWynMUk7KI"
+        run: wget "https://archive.org/download/com.google.ios.youtubemusic_9.23_und3fined/com.google.ios.youtubemusic_9.23_und3fined.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -91,24 +78,6 @@ jobs:
             mv *.sdk "$THEOS/sdks"
             cd ${{ github.workspace }}/theos/vendor/logos
             git checkout a62370066a97e36d59b200a9fa10c5091f5e8972
-            
-      - name: Clone headers
-        run: |
-          if [ ! -d "$THEOS/include/YouTubeHeader" ]; then
-            git clone --quiet --depth=1 https://github.com/PoomSmart/YouTubeHeader.git "$THEOS/include/YouTubeHeader"
-          else
-            cd $THEOS/include/YouTubeHeader
-            git pull --quiet --force
-            cd ${{ github.workspace }}
-          fi
-          
-          if [ ! -d "$THEOS/include/PSHeader" ]; then
-            git clone --quiet --depth=1 https://github.com/PoomSmart/PSHeader.git "$THEOS/include/PSHeader"
-          else
-            cd $THEOS/include/PSHeader
-            git pull --quiet --force
-            cd ${{ github.workspace }}
-          fi
 
       - name: Install cyan
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
@@ -118,8 +87,7 @@ jobs:
 
       - name: Build things
         run: |
-          cd YouMod
-          cd YTDownloadManager
+          cd FLEXHelperForYTMusic
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
 
@@ -131,7 +99,7 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_WTH.ipa -uwef $tweaks -n "WaterTest_WTH" -b com.waterdev.youtube.wth
+          cyan -i youtube.ipa -o WaterTest_WTH.ipa -uwef $tweaks -n "WaterTest_WTH" -b com.google.ios.youtubemusic
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
