@@ -57,7 +57,7 @@ jobs:
         if: ${{ !inputs.ios15 }}
         run: |
           brew install megatools
-          megadl --no-progress --path youtube.ipa "https://mega.nz/file/yDIk3bTC#B82yi8qvPswjfsxLXmBCAuvf5ww9bg3rS0i5TBu1ghU"
+          megadl --no-progress --path youtube.ipa "https://mega.nz/file/HTQ2HKaD#UbMgRza760pZ-ZXEIrPNGBFmAPHJ020XAoKtnQCr0i4"
 
       - name: Install Dependencies
         run: brew install make ldid
