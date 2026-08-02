@@ -5,12 +5,12 @@ on:
       repo:
         description: 'Repository to build from'
         required: true
-        default: 'grohit1810/YouMod'
+        default: 'Tonwalter888/YouMod'
 
       branch:
         description: 'Branch to build from'
         required: true
-        default: 'feature/add-sponsorblock'
+        default: 'main'
 
       ipa_url:
         description: "URL to the decrypted IPA file"
@@ -140,7 +140,7 @@ jobs:
           echo "YT_VERSION=$(grep -A 1 '<key>CFBundleVersion</key>' ytextracted/Payload/YouTube.app/Info.plist | grep '<string>' | awk -F'[><]' '{print $3}')" >> $GITHUB_ENV
 
       - name: Install Dependencies
-        run: brew install make ldid meson ninja
+        run: brew install make ldid
 
       - name: Set PATH Environment Variables
         run: |
@@ -155,7 +155,6 @@ jobs:
             git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
           }
           echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
-          echo "OPENYT_COMMIT=$(get_commit_hash "https://github.com/BillyCurtis/OpenYouTubeSafariExtension")" >> $GITHUB_ENV
 
       - name: Cache Theos
         id: cache-theos
@@ -262,7 +261,7 @@ jobs:
 
       - name: Clone Gonerino
         if: ${{ inputs.gonerino }}
-        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/Gonerino.git
+        run: git clone --quiet --depth=1 https://github.com/castdrian/Gonerino.git
 
       - name: Clone youtube-native-share
         if: ${{ inputs.ytshare }}
@@ -290,6 +289,7 @@ jobs:
         if: ${{ inputs.ytuhd }}
         run: |
           cd YTUHD
+          brew install meson ninja
           make libvpx dav1d
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
           mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
@@ -324,7 +324,7 @@ jobs:
       - name: Build UncappedAVPlayer
         run: |
           cd UncappedAVPlayer
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/uncapavplayer.deb
 
       - name: Build DontEatMyContent
