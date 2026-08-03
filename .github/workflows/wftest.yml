@@ -14,7 +14,7 @@ on:
 
       ipa_url:
         description: "URL to the decrypted IPA file"
-        default: ""
+        default: "https://mega.nz/file/zG50BQqQ#pVvOWwUHE9qpK9VTCPtVHxWAfDef5pqCsQNB75N5Yb8"
         required: true
         type: string
 
