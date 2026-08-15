@@ -1,16 +1,7 @@
-name: Build YTLite IPA with FLEX
+name: Build IPA with FLEX and YouMod main
 on:
   workflow_dispatch:
     inputs:
-      sdk_version:
-        description: "iOS SDK Version"
-        type: choice
-        options:
-          - 16.5
-          - 17.5
-          - 18.6
-        required: true
-        default: 18.6
       ios15:
         description: "Build for iOS 15?"
         type: boolean
@@ -23,7 +14,7 @@ concurrency:
   
 jobs:
   build:
-    name: Build YTLite IPA with FLEX
+    name: Build IPA with FLEX and YouMod test
     runs-on: macos-latest
     permissions:
       contents: write
@@ -47,14 +38,17 @@ jobs:
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
-          
+          git clone --quiet https://github.com/Tonwalter888/YouMod.git
+
       - name: 1
         if: ${{ inputs.ios15 }}
         run: wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
-      - name: 2
+      - name: Install MEGA downloader
         if: ${{ !inputs.ios15 }}
-        run: wget "https://filebin.net/e4eynafygxbp4hhs/YTLite_5.2.1_Cracked.ipa" --no-verbose --quiet -O youtube.ipa
+        run: |
+          brew install megatools
+          megadl --no-progress --path youtube.ipa "https://mega.nz/file/zG50BQqQ#pVvOWwUHE9qpK9VTCPtVHxWAfDef5pqCsQNB75N5Yb8"
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -63,6 +57,7 @@ jobs:
         run: |
           echo "$(brew --prefix make)/libexec/gnubin" >> $GITHUB_PATH
           echo "THEOS=${{ github.workspace }}/theos" >> $GITHUB_ENV 
+
       # Original from YTweaks
       - name: Get tweaks commit
         run: |
@@ -71,12 +66,13 @@ jobs:
             git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
           }
           echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
+
       - name: Cache Theos
         id: cache-theos
         uses: actions/cache@v6
         with:
           path: theos
-          key: 18.6-SDK-${{ env.THEOS_COMMIT }}
+          key: 26.5-SDK-${{ env.THEOS_COMMIT }}
 
       - name: Setup Theos
         if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
@@ -84,7 +80,7 @@ jobs:
             git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
             git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
             cd iOS-SDKs
-            git sparse-checkout set --no-cone iPhoneOS18.6.sdk
+            git sparse-checkout set --no-cone iPhoneOS26.5.sdk
             git checkout --quiet
             mv *.sdk "$THEOS/sdks"
             cd ${{ github.workspace }}/theos/vendor/logos
@@ -107,6 +103,7 @@ jobs:
             git pull --quiet --force
             cd ${{ github.workspace }}
           fi
+
       - name: Install cyan
         run: pipx install --force https://github.com/asdfzxcvbn/pyzule-rw/archive/main.zip
 
@@ -115,6 +112,11 @@ jobs:
 
       - name: Build things
         run: |
+          cd YouMod
+          git switch test
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youmod.deb
+          cd ..
           cd FLEXing
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/flex.deb
@@ -130,6 +132,7 @@ jobs:
           cd YTABConfig
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ab.deb
+
       - name: Inject Tweaks Into IPA
         run: |
           tweaks=""
@@ -138,12 +141,12 @@ jobs:
             tweaks="$tweaks $f"
           done
           
-          cyan -i youtube.ipa -o WaterTest_FLEX_YTLite.ipa -uwef $tweaks -n "WaterTest_FLEX_YTLite" -b com.waterdev.youtube.flex.ytlite
+          cyan -i youtube.ipa -o WaterTest_FLEX.ipa -uwef $tweaks -n "WaterTest_FLEX" -b com.waterdev.youtube.flex
           
       - name: Create a Draft Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: watertest-ipa${{ github.run_number }}
-          name: WaterTest_FLEX_YTLite (${{ github.run_number }}) 
-          files: WaterTest_FLEX_YTLite.ipa
+          name: WaterTest_FLEX (${{ github.run_number }}) 
+          files: WaterTest_FLEX.ipa
           draft: true
