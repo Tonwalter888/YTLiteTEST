@@ -16,10 +16,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 1
+        run: git clone --depth=1 --recurse https://github.com/arthenica/ffmpeg-kit-next ffmpeg
 
       - name: Install Build Tools & Dependencies
         run: |
@@ -28,11 +25,13 @@ jobs:
 
       - name: Setup Permissions
         run: |
+          cd ffmpeg
           chmod +x apple.sh
           find scripts -type f -name "*.sh" -exec chmod +x {} + 2>/dev/null || true
 
       - name: Build FFmpegKit for iOS
         run: |
+          cd ffmpeg
           TARGETS="--ios"
           if [ "${{ github.event.inputs.enable_simulator }}" = "true" ]; then
             TARGETS="$TARGETS --ios-simulator"
