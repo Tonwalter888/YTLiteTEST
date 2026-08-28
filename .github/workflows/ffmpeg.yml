@@ -32,13 +32,16 @@ jobs:
       - name: Build FFmpegKit for iOS
         run: |
           cd ffmpeg
-          TARGETS="--ios"
-          if [ "${{ github.event.inputs.enable_simulator }}" = "true" ]; then
-            TARGETS="$TARGETS --ios-simulator"
+          # กำหนด Target หลักสำหรับเครื่องจริง (iOS arm64)
+          TARGET_FLAGS="--target-ios-arm64"
+
+          # หากเลือกเปิด Simulator ให้เพิ่ม Target Simulator ทั้ง arm64 และ x86_64
+          if [ "${{ github.event.inputs.include_simulator }}" = "true" ]; then
+            TARGET_FLAGS="$TARGET_FLAGS --target-ios-arm64-simulator --target-ios-x86-64-simulator"
           fi
 
           ./apple.sh \
-            $TARGETS \
+            $TARGET_FLAGS \
             --xcframework \
             --enable-gpl \
             --enable-https \
@@ -47,6 +50,7 @@ jobs:
             --enable-opus \
             --enable-libx264 \
             --enable-lame \
+            --enable-libwebp \
             --enable-libass \
             --enable-freetype \
             --enable-fribidi \
