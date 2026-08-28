@@ -32,6 +32,7 @@ jobs:
       - name: Build FFmpegKit for iOS
         run: |
           cd ffmpeg
+          ./apple.sh --help
           # กำหนด Target หลักสำหรับเครื่องจริง (iOS arm64)
           TARGET_FLAGS="--target-ios-arm64"
 
