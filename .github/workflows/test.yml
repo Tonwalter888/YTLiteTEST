@@ -38,17 +38,15 @@ jobs:
           git clone --quiet --depth=1 https://github.com/Tonwalter888/FLEXHelperForYT.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTIcons.git
           git clone --quiet --depth=1 https://github.com/PoomSmart/YTABConfig.git
-          git clone --quiet https://github.com/grohit1810/YouMod.git
+          git clone --quiet https://github.com/Tonwalter888/YouMod.git
 
       - name: 1
         if: ${{ inputs.ios15 }}
         run: wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --no-verbose --quiet -O youtube.ipa
 
-      - name: Install MEGA downloader
+      - name: 2
         if: ${{ !inputs.ios15 }}
-        run: |
-          brew install megatools
-          megadl --no-progress --path youtube.ipa "https://mega.nz/file/zG50BQqQ#pVvOWwUHE9qpK9VTCPtVHxWAfDef5pqCsQNB75N5Yb8"
+        run: wget "https://decrypt.whoeevee.com/packages/wuhr5crq/com.google.ios.youtube-21.37.04.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -65,7 +63,7 @@ jobs:
             local repo_url=$1
             git ls-remote "$repo_url" HEAD | awk '{print substr($1,1,7)}'
           }
-          echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/theos/theos")" >> $GITHUB_ENV
+          echo "THEOS_COMMIT=$(get_commit_hash "https://github.com/roothide/theos")" >> $GITHUB_ENV
 
       - name: Cache Theos
         id: cache-theos
@@ -77,14 +75,12 @@ jobs:
       - name: Setup Theos
         if: ${{ steps.cache-theos.outputs.cache-hit != 'true' }}
         run: |
-            git clone --quiet --depth=1 --recurse-submodules https://github.com/theos/theos.git
+            git clone --quiet --depth=1 --recurse-submodules https://github.com/roothide/theos.git
             git clone --quiet --depth=1 -n --filter=tree:0 https://github.com/Tonwalter888/iOS-SDKs.git
             cd iOS-SDKs
             git sparse-checkout set --no-cone iPhoneOS26.5.sdk
             git checkout --quiet
             mv *.sdk "$THEOS/sdks"
-            cd ${{ github.workspace }}/theos/vendor/logos
-            git checkout a62370066a97e36d59b200a9fa10c5091f5e8972
             
       - name: Clone headers
         run: |
@@ -113,7 +109,7 @@ jobs:
       - name: Build things
         run: |
           cd YouMod
-          git switch feature/add-sponsorblock
+          git switch pre-release
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youmod.deb
           cd ..
