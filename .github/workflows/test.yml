@@ -46,7 +46,7 @@ jobs:
 
       - name: 2
         if: ${{ !inputs.ios15 }}
-        run: wget "https://decrypt.whoeevee.com/packages/wuhr5crq/com.google.ios.youtube-21.37.04.ipa" --no-verbose --quiet -O youtube.ipa
+        run: wget "https://decrypt.whoeevee.com/packages/mdesmqtw/com.google.ios.youtube-21.38.2.ipa" --no-verbose --quiet -O youtube.ipa
 
       - name: Install Dependencies
         run: brew install make ldid
@@ -146,5 +146,4 @@ jobs:
           name: WaterTest_FLEX (${{ github.run_number }}) 
           files: |
             WaterTest_FLEX.ipa
-            flex.deb
           draft: true
