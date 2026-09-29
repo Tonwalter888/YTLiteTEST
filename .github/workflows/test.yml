@@ -59,7 +59,7 @@ jobs:
         env:
           IPA_URL: ${{ inputs.ipa_url }}
         run: |
-          if [ !${{ inputs.isios15 }} ] then
+          if [ !${{ inputs.isios15 }} ]; then
             wget "$IPA_URL" --quiet --no-verbose -O youtube.ipa
           else
             wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --quiet --no-verbose -O youtube.ipa
