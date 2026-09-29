@@ -63,6 +63,7 @@ jobs:
             wget "$IPA_URL" --quiet --no-verbose -O youtube.ipa
           else
             wget "https://archive.org/download/com.google.ios.youtube-20.21.6-Decrypted/com.google.ios.youtube-20.21.6-Decrypted.ipa" --quiet --no-verbose -O youtube.ipa
+          fi
 
       - name: Validate IPA
         run: |
