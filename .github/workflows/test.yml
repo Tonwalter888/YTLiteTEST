@@ -4,7 +4,7 @@ on:
     inputs:
       ipa_url:
         description: "IPA URL for newer than iOS 15"
-        default: "https://decrypt.whoeevee.com/packages/mys0ezo5/com.google.ios.youtube-21.39.4.ipa"
+        default: "https://mega.nz/file/LHogBJTC#Mz3r_cKe8xRL6tioTQcKDp7wlYzZ1rmZ6Qs7lR5EUQk"
         required: true
         type: string
 
