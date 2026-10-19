@@ -4,7 +4,7 @@ on:
     inputs:
       ipa_url:
         description: "IPA URL for newer than iOS 15"
-        default: "https://mega.nz/file/LHogBJTC#Mz3r_cKe8xRL6tioTQcKDp7wlYzZ1rmZ6Qs7lR5EUQk"
+        default: "https://decrypt.whoeevee.com/packages/wkjdov4q/com.google.ios.youtube-21.41.5.ipa"
         required: true
         type: string
 
@@ -112,6 +112,8 @@ jobs:
             git sparse-checkout set --no-cone iPhoneOS26.5.sdk
             git checkout --quiet
             mv *.sdk "$THEOS/sdks"
+            cd ${{ github.workspace }}/theos/vendor/logos
+            git checkout a62370066a97e36d59b200a9fa10c5091f5e8972
             
       - name: Clone headers
         run: |
